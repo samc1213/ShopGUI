@@ -1,0 +1,14 @@
+from Constants import BIG_FONT_HEIGHT_FRACTION
+from ShopLabel import ShopLabel
+from Tkinter import StringVar
+
+class DisplayMessage():
+    def __init__(self, master, screen_height):
+        master.grid_columnconfigure(0, weight=1)
+        master.grid_rowconfigure(0, weight=1)
+        self.sv = StringVar()
+        self.sv.set('Enter some text!')
+        self.bigLabel = ShopLabel(master, self.sv, 0, 0, screen_height, BIG_FONT_HEIGHT_FRACTION)
+
+    def updateText(self, newText):
+        self.sv.set(newText)
