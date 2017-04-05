@@ -1,11 +1,10 @@
 import Tkinter as tk
 from Constants import BIG_FONT_HEIGHT_FRACTION, BACKGROUND_COLOR
-from ShopLabel import ShopLabel
+from TextLabel import TextLabel
 from DisplayMessage import DisplayMessage
+from DisplayImage import DisplayImage
 from FileReader import FileReader
-
-
-text = 'this'
+import time
 
 
 if __name__ == '__main__':
@@ -14,10 +13,17 @@ if __name__ == '__main__':
     root.overrideredirect(False)
     root.attributes('-fullscreen', True)
     root.configure(background=BACKGROUND_COLOR)
-    displayMessage = DisplayMessage(root, root.winfo_screenheight())
-    displayMessage.updateText('weoo')
 
-    reader = FileReader('textFile.txt', displayMessage)
+    # mainFrame = tk.Frame(root).pack(expand=1)
+
+    # displayMessage = DisplayMessage(root, root.winfo_screenheight())
+    # displayMessage.updateText('weoo')
+
+    # displayMessage2 = DisplayMessage(root, root.winfo_screenheight())
+    # displayMessage2.updateText('weoo34')
+    # time.sleep(10)
+
+    reader = FileReader(root, 'dbFile.txt', 'inputFile.txt')
     reader.startTimer()
 
     root.mainloop()
