@@ -9,7 +9,7 @@ class FileReader(object):
         self.inputFilePath = inputFilePath
         self.readDatabaseFile(databaseFilePath)
         self.t = Timer(FILE_POLL_INTERVAL, lambda: self.readInputFile())
-        self.factory = DisplayStateFactory()
+        self.factory = DisplayStateFactory(self.root)
 
     def startTimer(self):
         self.t.start()
@@ -40,11 +40,16 @@ class FileReader(object):
 
     def readInputFile(self):
         with open(self.inputFilePath) as f:
-            newInput = f.read().strip()
-        if newInput in self.database:
-            dbEntry = self.database[newInput]
-            self.factory.getDisplayState(self.root, dbEntry['templateNo'], dbEntry['stringList'], dbEntry['duration'], dbEntry['fileAddress'])
+            fileInput = f.read().strip()
+        print 'Reading fileinput: {0}'.format(fileInput)
+        displayStateIsNew = fileInput != self.factory.currentDisplayState
+        if fileInput in self.database and displayStateIsNew:
+            dbEntry = self.database[fileInput]
+            self.factory.updateDisplayState(dbEntry)
         else:
-            print 'The input {0} does not exist in the database. {1}'.format(newInput, self.database)
+            if displayStateIsNew:
+                print 'The input {0} does not exist in the database. Keeping old displayState. Database: {1}'.format(fileInput, self.database)
+            else:
+                print 'Old displayState'
         self.t = Timer(FILE_POLL_INTERVAL, lambda: self.readInputFile())
         self.t.start()

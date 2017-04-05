@@ -11,3 +11,13 @@ class DisplayImage(tk.Label):
         master.grid_columnconfigure(0, weight=1)
         master.grid_rowconfigure(0, weight=1)
         self.grid(row=0, column=0)
+
+    def updateImage(self, pilPhoto):
+        self.configure(image = pilPhoto)
+        self.image = pilPhoto
+
+    def hide(self):
+        self.grid_forget()
+
+    def show(self):
+        self.grid()

@@ -13,3 +13,9 @@ class DisplayMessage():
 
     def updateText(self, newText):
         self.sv.set(newText)
+
+    def hide(self):
+        self.bigLabel.grid_forget()
+
+    def show(self):
+        self.bigLabel.grid()
