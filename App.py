@@ -14,7 +14,7 @@ if __name__ == '__main__':
     root.attributes('-fullscreen', True)
     root.configure(background=BACKGROUND_COLOR)
 
-    reader = FileReader(root, 'dbFile.txt', 'inputFile.txt')
+    reader = FileReader(root, 'dbFile.txt', 'inputFile.txt', 'outputFile.txt')
     reader.startTimer()
 
     root.mainloop()
