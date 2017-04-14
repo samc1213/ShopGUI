@@ -11,9 +11,9 @@ class DisplayChoices(object):
         self.bigLabel = TextLabel(master, self.sv, 0, 0, screen_height, BIG_FONT_HEIGHT_FRACTION)
 
     def updateText(self, listOfChoices):
-        displayString = ''
-        for choiceIndex in range(len(listOfChoices)):
-            displayString += '{0}  {1}\n'.format(str(choiceIndex + 1), listOfChoices[choiceIndex]) 
+        displayString = listOfChoices[0] + '\n'
+        for choiceIndex in range(1, len(listOfChoices)):
+            displayString += '{0} - {1}\n'.format(choiceIndex, listOfChoices[choiceIndex])
         self.sv.set(displayString)
 
     def hide(self):

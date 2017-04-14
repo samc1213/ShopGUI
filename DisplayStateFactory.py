@@ -6,7 +6,6 @@ from DisplayChoices import DisplayChoices
 from PIL import Image, ImageTk
 
 
-
 class DisplayStateFactory(object):
     def __init__(self, root):
         self.currentDisplayState = None

@@ -1,4 +1,4 @@
-from Constants import BIG_FONT_HEIGHT_FRACTION
+from Constants import BIG_FONT_HEIGHT_FRACTION, VIDEO_SLEEP_TIME
 from TextLabel import TextLabel
 from Tkinter import PhotoImage
 import Tkinter as tk
@@ -23,7 +23,7 @@ class DisplayVideo(tk.Label):
             pilPhoto = ImageTk.PhotoImage(photo)
             self.configure(image=pilPhoto)
             self.image = pilPhoto
-            time.sleep(.9)
+            time.sleep(VIDEO_SLEEP_TIME)
             number += 1
             path = videoPath.replace('{NUMBER}', format(number, '04d'))
 
