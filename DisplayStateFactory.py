@@ -2,6 +2,7 @@ from Constants import DEFAULT_DISPLAYIMAGE_FILEPATH
 from DisplayMessage import DisplayMessage
 from DisplayImage import DisplayImage
 from DisplayVideo import DisplayVideo
+from DisplayChoices import DisplayChoices
 from PIL import Image, ImageTk
 
 
@@ -14,6 +15,7 @@ class DisplayStateFactory(object):
         pilPhoto = ImageTk.PhotoImage(photo)
         self.displayImage = DisplayImage(root, root.winfo_screenheight(), pilPhoto)
         self.displayVideo = DisplayVideo(root, root.winfo_screenheight(), pilPhoto)
+        self.displayChoices = DisplayChoices(root, root.winfo_screenheight())
         self.clearDisplay()
 
     def clearDisplay(self):
@@ -21,6 +23,7 @@ class DisplayStateFactory(object):
         self.displayImage.hide()
         self.displayMessage.hide()
         self.displayVideo.hide()
+        self.displayChoices.hide()
 
     def updateDisplayState(self, databaseEntry):
         if self.currentDisplayState != databaseEntry:
@@ -37,6 +40,11 @@ class DisplayStateFactory(object):
             self.currentDisplayState = databaseEntry
         elif databaseEntry['templateNo'] == 3:
             self.displayVideo.show()
+            self.currentDisplayState = databaseEntry
             self.displayVideo.playVideo(databaseEntry['fileAddress'])
+        elif databaseEntry['templateNo'] == 4:
+            self.displayChoices.updateText(databaseEntry['stringList'])
+            self.currentDisplayState = databaseEntry
+            self.displayChoices.show()
         else:
             raise 'I only know one TemplateNo'

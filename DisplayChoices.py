@@ -3,16 +3,18 @@ from TextLabel import TextLabel
 from Tkinter import StringVar
 
 
-class DisplayMessage(object):
+class DisplayChoices(object):
     def __init__(self, master, screen_height):
         master.grid_columnconfigure(0, weight=1)
         master.grid_rowconfigure(0, weight=1)
         self.sv = StringVar()
-        self.sv.set('Enter some text!')
         self.bigLabel = TextLabel(master, self.sv, 0, 0, screen_height, BIG_FONT_HEIGHT_FRACTION)
 
-    def updateText(self, newText):
-        self.sv.set(newText)
+    def updateText(self, listOfChoices):
+        displayString = ''
+        for choiceIndex in range(len(listOfChoices)):
+            displayString += '{0}  {1}\n'.format(str(choiceIndex + 1), listOfChoices[choiceIndex]) 
+        self.sv.set(displayString)
 
     def hide(self):
         self.bigLabel.grid_forget()
