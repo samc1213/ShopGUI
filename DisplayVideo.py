@@ -6,9 +6,10 @@ import imageio
 from PIL import Image, ImageTk
 import time
 import os
+from AbstractDisplay import AbstractDisplay
 
 
-class DisplayVideo(tk.Label):
+class DisplayVideo(tk.Label, AbstractDisplay):
     def __init__(self, master, screen_height, pilPhoto):
         tk.Label.__init__(self, master, image=pilPhoto)
         master.grid_columnconfigure(0, weight=1)

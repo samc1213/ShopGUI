@@ -3,9 +3,10 @@ from TextLabel import TextLabel
 from Tkinter import PhotoImage
 import Tkinter as tk
 from PIL import Image, ImageTk
+from AbstractDisplay import AbstractDisplay
 
 
-class DisplayImage(tk.Label):
+class DisplayImage(tk.Label, AbstractDisplay):
     def __init__(self, master, screen_height, pilPhoto):
         tk.Label.__init__(self, master, image=pilPhoto)
         master.grid_columnconfigure(0, weight=1)
