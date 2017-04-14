@@ -1,3 +1,5 @@
 DisplayState,Template #,StringList(; delimited),Duration,FileAddress
 HelloWorld,1,Hello World,20,
 EyeImage,2,,10,images/testimage.jpg
+OkGo,3,,10,images/image-{NUMBER}.jpeg
+Test,2,,10,images/image-0001.jpeg

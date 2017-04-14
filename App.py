@@ -1,8 +1,6 @@
 import Tkinter as tk
 from Constants import BIG_FONT_HEIGHT_FRACTION, BACKGROUND_COLOR
 from TextLabel import TextLabel
-from DisplayMessage import DisplayMessage
-from DisplayImage import DisplayImage
 from FileReader import FileReader
 import time
 

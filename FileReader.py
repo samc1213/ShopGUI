@@ -60,6 +60,7 @@ class FileReader(object):
 
     def updateState(self, fileInput, displayStateIsNew):
         if fileInput in self.database and displayStateIsNew:
+            self.writeStatus('NEW FILEINPUT {0}'.format(fileInput))
             dbEntry = self.database[fileInput]
             self.factory.updateDisplayState(dbEntry)
             self.timeoutTimer = Timer(dbEntry['duration'], lambda: self.onTimeout())

@@ -13,7 +13,7 @@ class DisplayImage(tk.Label):
         self.grid(row=0, column=0)
 
     def updateImage(self, pilPhoto):
-        self.configure(image = pilPhoto)
+        self.configure(image=pilPhoto)
         self.image = pilPhoto
 
     def hide(self):
