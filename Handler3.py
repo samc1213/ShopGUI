@@ -107,7 +107,7 @@ class Handler(object):
             counter = counter+.1
             self.TD.set_Sec_Count(counter)
 
-            logging.debug('Timer counted to %d seconds', max_seconds)
+        logging.debug('Timer counted to %d seconds', max_seconds)
 
     def Csense(self):
         Alert=self.TD.get_Alert_State()
