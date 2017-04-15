@@ -5,7 +5,6 @@ import time
 import logging
 import sys
 import serial
-from App import mainGuiLoop, running
 
 from GPIO_Class import GPIO_Class
 LED=GPIO_Class()
@@ -113,24 +112,24 @@ def Csense():
   logging.debug('Csense shutting Down')
 
 
+
+def main1():
 threads=[]
-def main():
   A=threading.Thread(name='Alert',target=Alert)
   C=threading.Thread(name='Csense',target=Csense)
   F=threading.Thread(name='FPS',target=Fingerprint)
   T=threading.Thread(name='Timer',target=Timer,args=(300,))
-  G=threading.Thread(name='GUI', target=mainGuiLoop)
+
 
   threads.append(A)
   threads.append(C)
   threads.append(F)
   threads.append(T)
-  threads.append(G)
+
   A.start()
   C.start()
   F.start()
   T.start()
-  G.start()
   while TD.get_Sec_Count()<100:
 
         if TD.get_Sec_Count()>=70:
@@ -143,7 +142,7 @@ def main():
 
 if __name__ == "__main__":
     try:
-        main()
+        main1()
     except Exception as e:
         print e
         port.close()
