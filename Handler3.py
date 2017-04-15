@@ -30,7 +30,7 @@ class Handler(object):
         threads = []
         A = threading.Thread(name='Alert', target=self.Alert)
         C = threading.Thread(name='Csense', target=self.Csense)
-        F = threading.Thread(name='self.fps', target=self.Fingerprint)
+        F = threading.Thread(name='FPS', target=self.Fingerprint)
         T = threading.Thread(name='Timer', target=self.Timer, args=(300,))
 
         threads.append(A)
@@ -63,13 +63,13 @@ class Handler(object):
                 logging.debug('enroll')
                 ID=input('Enter 7 digit ID Number: \n')
                 OW=input('Enable Overwrite: \n(1-enable, 0-disable)\n')
-                self.fps.self.fps_Get_Template(ID,OW)
+                self.fps.FPS_Get_Template(ID,OW)
                 self.TD.set_Sys_State('idle')
                 logging.debug('Changing sys to idle')
             if Sys=='identify':
                 logging.debug('IDENTIFY')
                 ID=input('Enter 7 digit ID Number: \n')
-            if self.fps.self.fps_Identify(ID):
+            if self.fps.FPS_Identify(ID):
                 self.TD.set_Alert_State('green')
                 logging.debug('Changing alert to green')
                 self.TD.set_Sys_State('idle')
@@ -112,7 +112,7 @@ class Handler(object):
     def Csense(self):
         Alert=self.TD.get_Alert_State()
         Sys=self.TD.get_Sys_State()
-        self.Button.Initself.Button()
+        self.Button.InitButton()
         counter=0
         while Sys!='shuself.TDown' and self.running:
             logging.debug('Checking_self.Button')
