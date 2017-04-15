@@ -31,7 +31,7 @@ class Handler(object):
         A = threading.Thread(name='Alert', target=self.Alert)
         C = threading.Thread(name='Csense', target=self.Csense)
         F = threading.Thread(name='self.fps', target=self.Fingerprint)
-        T = threading.Thread(name='Timer', target=Timer, args=(300,))
+        T = threading.Thread(name='Timer', target=self.Timer, args=(300,))
 
         threads.append(A)
         threads.append(C)
