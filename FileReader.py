@@ -49,7 +49,6 @@ class FileReader(object):
     def readInputFileAndUpdateState(self):
         with open(self.inputFilePath) as f:
             fileInput = f.read().strip()
-        print 'Reading fileinput: {0}'.format(fileInput)
         displayStateIsNew = fileInput != self.factory.currentDisplayState
         self.updateState(fileInput, displayStateIsNew)
         self.restartFilePollTimer()
@@ -61,16 +60,14 @@ class FileReader(object):
     def updateState(self, fileInput, displayStateIsNew):
         if fileInput in self.database and displayStateIsNew:
             self.writeStatus('NEW FILEINPUT {0}'.format(fileInput))
+            print 'New FileInput {0}'.format(fileInput)
             dbEntry = self.database[fileInput]
             self.factory.updateDisplayState(dbEntry)
             self.timeoutTimer = Timer(dbEntry['duration'], lambda: self.onTimeout())
             self.timeoutTimer.start()
-        else:
-            if displayStateIsNew:
+        elif displayStateIsNew:
                 self.writeStatus('BAD INPUT - NO EXISTY IN DATABASY')
                 print 'The input {0} does not exist in the database. Keeping old displayState. Database: {1}'.format(fileInput, self.database)
-            else:
-                pass
 
     def writeStatus(self, status):
         with open(self.outputFilePath, 'w') as f:

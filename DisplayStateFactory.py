@@ -3,6 +3,7 @@ from DisplayMessage import DisplayMessage
 from DisplayImage import DisplayImage
 from DisplayVideo import DisplayVideo
 from DisplayChoices import DisplayChoices
+from DisplayEntry import DisplayEntry
 from PIL import Image, ImageTk
 
 
@@ -15,6 +16,7 @@ class DisplayStateFactory(object):
         self.displayImage = DisplayImage(root, root.winfo_screenheight(), pilPhoto)
         self.displayVideo = DisplayVideo(root, root.winfo_screenheight(), pilPhoto)
         self.displayChoices = DisplayChoices(root, root.winfo_screenheight())
+        self.displayEntry = DisplayEntry(root, root.winfo_screenheight())
         self.clearDisplay()
 
     def clearDisplay(self):
@@ -23,6 +25,7 @@ class DisplayStateFactory(object):
         self.displayMessage.hide()
         self.displayVideo.hide()
         self.displayChoices.hide()
+        self.displayEntry.hide()
 
     def updateDisplayState(self, databaseEntry):
         if self.currentDisplayState != databaseEntry:
@@ -45,5 +48,8 @@ class DisplayStateFactory(object):
             self.displayChoices.updateText(databaseEntry['stringList'])
             self.currentDisplayState = databaseEntry
             self.displayChoices.show()
+        elif databaseEntry['templateNo'] == 5:
+            self.currentDisplayState = databaseEntry
+            self.displayEntry.show()
         else:
-            raise 'I only know one TemplateNo'
+            raise 'Invalid templateNo: {0}'.format(databaseEntry['templateNo'])

@@ -4,3 +4,4 @@ EyeImage,2,,10,images/testimage.jpg
 OkGo,3,,10,images/image-{NUMBER}.jpeg
 Test,2,,10,images/image-0001.jpeg
 Choices,4,choose a choice:;choice1;choice2;choice3,10,
+Input,5,,35,
