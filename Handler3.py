@@ -7,7 +7,7 @@ import sys
 import serial
 from GPIO_Class import GPIO_Class
 from Thread_Data_Object import Thread_Data
-from fps_Class import fps_Class
+from FPS_Class import FPS_Class
 
 
 class Handler(object):
@@ -15,7 +15,7 @@ class Handler(object):
         self.LED = GPIO_Class()
         self.Button = GPIO_Class()
         self.TD = Thread_Data()
-        self.fps = fps_Class()
+        self.fps = FPS_Class()
 
         self.port = serial.Serial(
                 "/dev/ttyAMA0",
