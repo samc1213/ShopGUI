@@ -69,14 +69,14 @@ class Handler(object):
             if Sys=='identify':
                 logging.debug('IDENTIFY')
                 ID=input('Enter 7 digit ID Number: \n')
-            if self.fps.FPS_Identify(ID):
-                self.TD.set_Alert_State('green')
-                logging.debug('Changing alert to green')
-                self.TD.set_Sys_State('idle')
-                logging.debug('Changing sys to idle')
-            Sys=self.TD.get_Sys_State()
+                if self.fps.FPS_Identify(ID):
+                    self.TD.set_Alert_State('green')
+                    logging.debug('Changing alert to green')
+                    self.TD.set_Sys_State('idle')
+                    logging.debug('Changing sys to idle')
+            Sys = self.TD.get_Sys_State()
             time.sleep(.5)
-            counter=counter+1
+            counter = counter+1
             if counter==300:
                 sys.exit(0)
         logging.debug('Fingerprint shutting Down')
@@ -84,7 +84,7 @@ class Handler(object):
     def Alert(self):
         Alert=self.TD.get_Alert_State()
         Sys=self.TD.get_Sys_State()
-        self.LED.Initself.LED()
+        self.LED.InitLED()
         counter=0
         while Sys!='shuself.TDown' and self.running:
             logging.debug('updating self.LED')
@@ -100,14 +100,14 @@ class Handler(object):
         logging.debug('Alert shutting Down')
 
     def Timer(self, max_seconds):
-        counter=0
-        while counter<=max_seconds and self.running:
+        counter = 0
+        while counter <= max_seconds and self.running:
             #logging.debug(counter)
             time.sleep(.1)
-            counter=counter+.1
+            counter = counter+.1
             self.TD.set_Sec_Count(counter)
 
-            logging.debug('Timer counted to %d seconds',max_seconds)
+            logging.debug('Timer counted to %d seconds', max_seconds)
 
     def Csense(self):
         Alert=self.TD.get_Alert_State()
