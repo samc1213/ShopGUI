@@ -15,5 +15,4 @@ if __name__ == '__main__':
     reader = FileReader(root, 'dbFile.txt', 'inputFile.txt', 'outputFile.txt')
     reader.startTimer()
 
-    root.bind("<W>", tit)
     root.mainloop()
