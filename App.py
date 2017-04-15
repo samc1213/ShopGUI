@@ -5,7 +5,7 @@ from FileReader import FileReader
 import time
 
 
-if __name__ == '__main__':
+def mainGuiLoop():
     root = tk.Tk()
     root.overrideredirect(True)
     root.overrideredirect(False)
@@ -16,3 +16,7 @@ if __name__ == '__main__':
     reader.startTimer()
 
     root.mainloop()
+
+
+if __name__ == '__main__':
+    mainGuiLoop()

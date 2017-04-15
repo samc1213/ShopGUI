@@ -5,6 +5,7 @@ import time
 import logging
 import sys
 import serial
+from App import mainGuiLoop
 
 from GPIO_Class import GPIO_Class
 LED=GPIO_Class()
@@ -17,9 +18,9 @@ from FPS_Class import FPS_Class
 fps=FPS_Class()
 
 port = serial.Serial(
-		"/dev/ttyAMA0",
-		baudrate=9600,
-		timeout=None)	# <12>port = None
+        "/dev/ttyAMA0",
+        baudrate=9600,
+        timeout=None)	# <12>port = None
 
 logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s',)
 
@@ -37,10 +38,10 @@ def Fingerprint():
           OW=input('Enable Overwrite: \n(1-enable, 0-disable)\n')
           fps.FPS_Get_Template(ID,OW)
           TD.set_Sys_State('idle')
-          logging.debug('Changing sys to idle')   
+          logging.debug('Changing sys to idle')
       if Sys=='identify':
          logging.debug('IDENTIFY')
-         ID=input('Enter 7 digit ID Number: \n')   
+         ID=input('Enter 7 digit ID Number: \n')
          if fps.FPS_Identify(ID):
              TD.set_Alert_State('green')
              logging.debug('Changing alert to green')
@@ -70,7 +71,7 @@ def Alert():
 
   LED.Cleanup()
   logging.debug('Alert shutting Down')
-  
+
 def Timer(max_seconds):
   counter=0
   while counter<=max_seconds and running:
@@ -82,7 +83,7 @@ def Timer(max_seconds):
   logging.debug('Timer counted to %d seconds',max_seconds)
 
 
-  
+
 def Csense():
   Alert=TD.get_Alert_State()
   Sys=TD.get_Sys_State()
@@ -98,7 +99,7 @@ def Csense():
             TD.set_Alert_State('red__')
             logging.debug('Changing alert to red')
             time.sleep(.5)
-      else: 
+      else:
         if Alert=='red__':
             time.sleep(2)
             TD.set_Alert_State('blue_')
@@ -110,32 +111,35 @@ def Csense():
 
   Button.Cleanup()
   logging.debug('Csense shutting Down')
-  
+
 
 threads=[]
-def main(): 
+def main():
   A=threading.Thread(name='Alert',target=Alert)
   C=threading.Thread(name='Csense',target=Csense)
   F=threading.Thread(name='FPS',target=Fingerprint)
   T=threading.Thread(name='Timer',target=Timer,args=(300,))
-  
+  G=threading.Thread(name='GUI', target=mainGuiLoop)
+
   threads.append(A)
   threads.append(C)
   threads.append(F)
   threads.append(T)
+  threads.append(G)
   A.start()
   C.start()
   F.start()
   T.start()
+  G.start()
   while TD.get_Sec_Count()<100:
 
         if TD.get_Sec_Count()>=70:
             TD.set_Sys_State('shutdown')
         elif TD.get_Sec_Count()>=10 and TD.get_Alert_State()!='green':
-            TD.set_Sys_State('identify')    
+            TD.set_Sys_State('identify')
         time.sleep(1)
 
-  
+
 
 if __name__ == "__main__":
     try:
@@ -149,4 +153,3 @@ if __name__ == "__main__":
         port.close()
         print("Handler_Shutting_Down")
         running = False
-        
