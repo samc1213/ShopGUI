@@ -5,7 +5,7 @@ import time
 import logging
 import sys
 import serial
-from App import mainGuiLoop
+from App import mainGuiLoop, running
 
 from GPIO_Class import GPIO_Class
 LED=GPIO_Class()
@@ -143,7 +143,6 @@ def main():
 
 if __name__ == "__main__":
     try:
-        running = True
         main()
     except Exception as e:
         print e
@@ -152,4 +151,3 @@ if __name__ == "__main__":
         time.sleep(2)
         port.close()
         print("Handler_Shutting_Down")
-        running = False
