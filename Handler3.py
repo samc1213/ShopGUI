@@ -57,7 +57,7 @@ class Handler(object):
     def Fingerprint(self):
         Sys=self.TD.get_Sys_State()
         counter=0
-        while Sys!='shuself.TDown' and self.running:
+        while Sys!='shutdown' and self.running:
             logging.debug('IDLE')
             if Sys=='enroll':
                 logging.debug('enroll')
@@ -86,11 +86,11 @@ class Handler(object):
         Sys=self.TD.get_Sys_State()
         self.LED.InitLED()
         counter=0
-        while Sys!='shuself.TDown' and self.running:
+        while Sys!='shutdown' and self.running:
             logging.debug('updating self.LED')
             Alert=self.TD.get_Alert_State()
             Sys=self.TD.get_Sys_State()
-            self.LED.self.LED_ON(Alert)
+            self.LED.LED_ON(Alert)
             time.sleep(.5)
             counter=counter+1
             if counter==300:
@@ -114,11 +114,11 @@ class Handler(object):
         Sys=self.TD.get_Sys_State()
         self.Button.InitButton()
         counter=0
-        while Sys!='shuself.TDown' and self.running:
-            logging.debug('Checking_self.Button')
+        while Sys!='shutdown' and self.running:
+            logging.debug('Checking Button')
             Alert=self.TD.get_Alert_State()
             Sys=self.TD.get_Sys_State()
-            if self.Button.Readself.Button():
+            if self.Button.ReadButton():
                 Alert=self.TD.get_Alert_State()
                 if Alert=='blue_':
                     self.TD.set_Alert_State('red__')
