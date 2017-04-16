@@ -61,8 +61,8 @@ class FileReader(object):
             self.timeoutTimer = Timer(dbEntry['duration'], lambda: self.onTimeout())
             self.timeoutTimer.start()
         elif displayStateIsNew:
-                self.writeStatus('BAD INPUT - NO EXISTY IN DATABASY')
-                print 'The input {0} does not exist in the database. Keeping old displayState. Database: {1}'.format(fileInput, self.database)
+            self.writeStatus('BAD INPUT - NO EXISTY IN DATABASY')
+            print 'The input {0} does not exist in the database. Keeping old displayState. Database: {1}'.format(fileInput, self.database)
 
     def writeStatus(self, status):
         with open(self.outputFilePath, 'w') as f:

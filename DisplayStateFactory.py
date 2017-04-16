@@ -34,6 +34,7 @@ class DisplayStateFactory(object):
             self.displayMessage.updateText(databaseEntry['stringList'][0])
             self.currentDisplayState = fileInput
             self.displayMessage.show()
+            print 'TEMPLATE 1!'
         elif databaseEntry['templateNo'] == 2:
             photo = Image.open(databaseEntry['fileAddress'])
             pilPhoto = ImageTk.PhotoImage(photo)

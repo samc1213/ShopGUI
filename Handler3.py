@@ -23,7 +23,7 @@ class Handler(object):
                 baudrate=9600,
                 timeout=None)	# <12>port = None
 
-        logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s',)
+        # logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s',)
 
         self.running = False
 
