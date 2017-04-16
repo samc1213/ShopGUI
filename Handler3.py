@@ -11,11 +11,12 @@ from FPS_Class import FPS_Class
 
 
 class Handler(object):
-    def __init__(self):
+    def __init__(self, guiEditor):
         self.LED = GPIO_Class()
         self.Button = GPIO_Class()
-        self.TD = Thread_Data()
+        self.TD = Thread_Data(guiEditor)
         self.fps = FPS_Class()
+        self.guiEditor = guiEditor
 
         self.port = serial.Serial(
                 "/dev/ttyAMA0",
@@ -42,11 +43,15 @@ class Handler(object):
         C.start()
         F.start()
         T.start()
-        while self.TD.get_Sec_Count()<100:
-            if self.TD.get_Sec_Count()>=70:
-                self.TD.set_Sys_State('shuself.TDown')
-            elif self.TD.get_Sec_Count()>=10 and self.TD.get_Alert_State() != 'green':
-                self.TD.set_Sys_State('identify')
+        while self.TD.get_Sec_Count() < 100:
+            if self.TD.get_Sec_Count() >= 70:
+                self.TD.set_Sys_State('shutdown')
+            elif self.TD.get_Sec_Count() >= 20:
+                self.TD.set_Sys_State('EyeImage')
+            elif self.TD.get_Sec_Count() >= 0:
+                self.TD.set_Sys_State('HelloWorld')
+            # elif self.TD.get_Sec_Count() >= 10 and self.TD.get_Alert_State() != 'green':
+                # self.TD.set_Sys_State('identify')
             time.sleep(1)
 
     def StartWorkerThreads(self):

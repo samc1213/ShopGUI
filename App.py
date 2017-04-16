@@ -7,7 +7,10 @@ from Handler3 import Handler
 import threading
 
 
-def mainGuiLoop():
+def mainGuiLoop(root):
+    root.mainloop()
+
+def setUp():
     root = tk.Tk()
     root.overrideredirect(True)
     root.overrideredirect(False)
@@ -15,16 +18,16 @@ def mainGuiLoop():
     root.configure(background=BACKGROUND_COLOR)
 
     reader = FileReader(root, 'dbFile.txt', 'inputFile.txt', 'outputFile.txt')
-    reader.startTimer()
 
-    root.mainloop()
+    return reader, root
 
 
 if __name__ == '__main__':
     try:
-        handler = Handler()
+        reader, root = setUp()
+        handler = Handler(reader)
         handler.StartWorkerThreads()
-        mainGuiLoop()
+        mainGuiLoop(root)
     except Exception as e:
         print e
         port.close()

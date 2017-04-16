@@ -27,29 +27,29 @@ class DisplayStateFactory(object):
         self.displayChoices.hide()
         self.displayEntry.hide()
 
-    def updateDisplayState(self, databaseEntry):
-        if self.currentDisplayState != databaseEntry:
+    def updateDisplayState(self, databaseEntry, fileInput):
+        if self.currentDisplayState != fileInput:
             self.clearDisplay()
         if databaseEntry['templateNo'] == 1:
             self.displayMessage.updateText(databaseEntry['stringList'][0])
-            self.currentDisplayState = databaseEntry
+            self.currentDisplayState = fileInput
             self.displayMessage.show()
         elif databaseEntry['templateNo'] == 2:
             photo = Image.open(databaseEntry['fileAddress'])
             pilPhoto = ImageTk.PhotoImage(photo)
             self.displayImage.updateImage(pilPhoto)
             self.displayImage.show()
-            self.currentDisplayState = databaseEntry
+            self.currentDisplayState = fileInput
         elif databaseEntry['templateNo'] == 3:
             self.displayVideo.show()
-            self.currentDisplayState = databaseEntry
+            self.currentDisplayState = fileInput
             self.displayVideo.playVideo(databaseEntry['fileAddress'])
         elif databaseEntry['templateNo'] == 4:
             self.displayChoices.updateText(databaseEntry['stringList'])
-            self.currentDisplayState = databaseEntry
+            self.currentDisplayState = fileInput
             self.displayChoices.show()
         elif databaseEntry['templateNo'] == 5:
-            self.currentDisplayState = databaseEntry
+            self.currentDisplayState = fileInput
             self.displayEntry.show()
         else:
             raise 'Invalid templateNo: {0}'.format(databaseEntry['templateNo'])

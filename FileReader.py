@@ -9,8 +9,6 @@ class FileReader(object):
         self.inputFilePath = inputFilePath
         self.outputFilePath = outputFilePath
         self.readDatabaseFile(databaseFilePath)
-        self.filePollTimer = Timer(FILE_POLL_INTERVAL, lambda: self.readInputFileAndUpdateState())
-        self.timeoutTimer = None
         self.factory = DisplayStateFactory(self.rootGUIWidget)
 
     def startTimer(self):
@@ -49,20 +47,17 @@ class FileReader(object):
     def readInputFileAndUpdateState(self):
         with open(self.inputFilePath) as f:
             fileInput = f.read().strip()
-        displayStateIsNew = fileInput != self.factory.currentDisplayState
+
         self.updateState(fileInput, displayStateIsNew)
         self.restartFilePollTimer()
 
-    def restartFilePollTimer(self):
-        self.filePollTimer = Timer(FILE_POLL_INTERVAL, lambda: self.readInputFileAndUpdateState())
-        self.filePollTimer.start()
-
-    def updateState(self, fileInput, displayStateIsNew):
+    def updateState(self, fileInput):
+        displayStateIsNew = fileInput != self.factory.currentDisplayState
         if fileInput in self.database and displayStateIsNew:
             self.writeStatus('NEW FILEINPUT {0}'.format(fileInput))
             print 'New FileInput {0}'.format(fileInput)
             dbEntry = self.database[fileInput]
-            self.factory.updateDisplayState(dbEntry)
+            self.factory.updateDisplayState(dbEntry, fileInput)
             self.timeoutTimer = Timer(dbEntry['duration'], lambda: self.onTimeout())
             self.timeoutTimer.start()
         elif displayStateIsNew:

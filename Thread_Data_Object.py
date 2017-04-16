@@ -4,15 +4,17 @@ import sys
 
 
 class Thread_Data(object):
-    def __init__(self):
+    def __init__(self, guiEditor):
         self._Sys='IDLE'
         self._Alert='blue_'
+        self.guiEditor = guiEditor
         pass
     def get_Sys_State(self):
         return self._Sys
     def get_Alert_State(self):
         return self._Alert
-    def set_Sys_State(self,new_sys):
+    def set_Sys_State(self, new_sys):
+        self.guiEditor.updateState(new_sys)
         self._Sys=new_sys
     def set_Alert_State(self,new_Alert):
         self._Alert=new_Alert
@@ -20,10 +22,8 @@ class Thread_Data(object):
         self._Sec_Count=new_Sec_Count
     def get_Sec_Count(self):
         return self._Sec_Count
-    
+
     #private
     _Sys='' #system state
     _Alert='' #alert state
     _Sec_Count=0
-        
-
