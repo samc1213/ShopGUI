@@ -46,14 +46,15 @@ class Handler(object):
         while self.TD.get_Sec_Count() < 100:
             if self.TD.get_Sec_Count() >= 70:
                 self.TD.set_Sys_State('shutdown')
-            elif self.TD.get_Sec_Count() >= 40:
-                self.TD.set_Sys_State('HelloWorld')
-            elif self.TD.get_Sec_Count() >= 20:
-                self.TD.set_Sys_State('EyeImage')
-            elif self.TD.get_Sec_Count() >= 0:
-                self.TD.set_Sys_State('HelloWorld')
-            # elif self.TD.get_Sec_Count() >= 10 and self.TD.get_Alert_State() != 'green':
-                # self.TD.set_Sys_State('identify')
+            # elif self.TD.get_Sec_Count() >= 40:
+            #     self.TD.set_Display_State('HelloWorld')
+            # elif self.TD.get_Sec_Count() >= 20:
+            #     self.TD.set_Display_State('EyeImage')
+            # elif self.TD.get_Sec_Count() >= 0:
+            #     self.TD.set_Display_State('HelloWorld')
+            elif self.TD.get_Sec_Count() >= 10 and self.TD.get_Alert_State() != 'green':
+                self.TD.set_Sys_State('identify')
+                self.TD.set_Display_State('Input')
             time.sleep(1)
 
     def StartWorkerThreads(self):
@@ -75,12 +76,16 @@ class Handler(object):
                 logging.debug('Changing sys to idle')
             if Sys=='identify':
                 logging.debug('IDENTIFY')
-                ID=input('Enter 7 digit ID Number: \n')
+                ID = int(self.guiEditor.getInput())
+                self.TD.set_Display_State('FingerPrompt')
                 if self.fps.FPS_Identify(ID):
+                    self.TD.set_Display_State('UserFound')
                     self.TD.set_Alert_State('green')
                     logging.debug('Changing alert to green')
                     self.TD.set_Sys_State('idle')
                     logging.debug('Changing sys to idle')
+                else:
+                    self.TD.set_Display_State('UserNotFound')
             Sys = self.TD.get_Sys_State()
             time.sleep(.5)
             counter = counter+1

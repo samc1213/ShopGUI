@@ -1,6 +1,7 @@
 from Constants import FILE_POLL_INTERVAL, DATABASE_FILE_DELIMITER, STRING_LIST_DELIMITER
 from threading import Timer
 from DisplayStateFactory import DisplayStateFactory
+import time
 
 
 class FileReader(object):
@@ -57,6 +58,10 @@ class FileReader(object):
     def writeStatus(self, status):
         with open(self.outputFilePath, 'w') as f:
             f.write(status)
+
+    def getInput(self):
+        time.sleep(10)
+        return '2765750'
 
     def onTimeout(self):
         self.writeStatus('TIMEOUT-SUCCESS')
