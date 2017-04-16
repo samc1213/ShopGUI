@@ -11,9 +11,6 @@ class FileReader(object):
         self.readDatabaseFile(databaseFilePath)
         self.factory = DisplayStateFactory(self.rootGUIWidget)
 
-    def startTimer(self):
-        self.filePollTimer.start()
-
     def readDatabaseFile(self, databaseFilePath):
         print 'Reading Database File'
         with open(databaseFilePath, 'r') as f:
@@ -43,13 +40,6 @@ class FileReader(object):
             return False
         else:
             return True
-
-    def readInputFileAndUpdateState(self):
-        with open(self.inputFilePath) as f:
-            fileInput = f.read().strip()
-
-        self.updateState(fileInput, displayStateIsNew)
-        self.restartFilePollTimer()
 
     def updateState(self, fileInput):
         displayStateIsNew = fileInput != self.factory.currentDisplayState

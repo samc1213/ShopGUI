@@ -46,6 +46,8 @@ class Handler(object):
         while self.TD.get_Sec_Count() < 100:
             if self.TD.get_Sec_Count() >= 70:
                 self.TD.set_Sys_State('shutdown')
+            elif self.TD.get_Sec_Count() >= 40:
+                self.TD.set_Sys_State('HelloWorld')
             elif self.TD.get_Sec_Count() >= 20:
                 self.TD.set_Sys_State('EyeImage')
             elif self.TD.get_Sec_Count() >= 0:
