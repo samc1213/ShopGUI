@@ -8,15 +8,16 @@ from PIL import Image, ImageTk
 
 
 class DisplayStateFactory(object):
-    def __init__(self, root):
+    def __init__(self, root, onInput):
         self.currentDisplayState = None
+        self.onInput = onInput
         self.displayMessage = DisplayMessage(root, root.winfo_screenheight())
         photo = Image.open(DEFAULT_DISPLAYIMAGE_FILEPATH)
         pilPhoto = ImageTk.PhotoImage(photo)
         self.displayImage = DisplayImage(root, root.winfo_screenheight(), pilPhoto)
         self.displayVideo = DisplayVideo(root, root.winfo_screenheight(), pilPhoto)
-        self.displayChoices = DisplayChoices(root, root.winfo_screenheight())
-        self.displayEntry = DisplayEntry(root, root.winfo_screenheight())
+        self.displayChoices = DisplayChoices(root, root.winfo_screenheight(), self.onInput)
+        self.displayEntry = DisplayEntry(root, root.winfo_screenheight(), onInput)
         self.clearDisplay()
 
     def clearDisplay(self):
@@ -34,7 +35,6 @@ class DisplayStateFactory(object):
             self.displayMessage.updateText(databaseEntry['stringList'][0])
             self.currentDisplayState = fileInput
             self.displayMessage.show()
-            print 'TEMPLATE 1!'
         elif databaseEntry['templateNo'] == 2:
             photo = Image.open(databaseEntry['fileAddress'])
             pilPhoto = ImageTk.PhotoImage(photo)

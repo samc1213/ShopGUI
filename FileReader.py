@@ -5,22 +5,27 @@ import time
 
 
 class FileReader(object):
-    def __init__(self, rootGUIWidget, databaseFilePath, inputFilePath, outputFilePath):
+    def __init__(self, rootGUIWidget, databaseFilePath, inputFilePath, outputFilePath, guiObserver):
         self.rootGUIWidget = rootGUIWidget
         self.inputFilePath = inputFilePath
         self.outputFilePath = outputFilePath
         self.readDatabaseFile(databaseFilePath)
-        self.factory = DisplayStateFactory(self.rootGUIWidget)
+        self.factory = DisplayStateFactory(self.rootGUIWidget, self.onInput)
+        self.observer = guiObserver
+        self.timeoutTimer = None
+
+    def onInput(self, input):
+        print 'input received from display, {0}'.format(input)
 
     def readDatabaseFile(self, databaseFilePath):
-        print 'Reading Database File'
+        print 'Reading database file'
         with open(databaseFilePath, 'r') as f:
             newText = f.read()
         self.database = {}
         for row in newText.split('\n')[1:]:
             rowSplit = row.split(DATABASE_FILE_DELIMITER)
             if (len(rowSplit) != 5):
-                print 'Skipping row. Length Incorrect. {0}'.format(row)
+                print 'Skipping row. Length incorrect. {0}'.format(row)
                 continue
             try:
                 displayState = rowSplit[0].strip()
@@ -31,19 +36,11 @@ class FileReader(object):
             except Exception as ex:
                 print 'There was a problem parsing the database row: {0}. {1}'.format(row, str(ex))
                 continue
-            if not self.isDatabaseRowValid(templateNo, stringList, duration):
-                print 'Databse row contains invalid data: {0}'.format(row)
-                continue
             self.database[displayState] = {'templateNo': templateNo, 'stringList': stringList, 'duration': duration, 'fileAddress': fileAddress}
-
-    def isDatabaseRowValid(self, templateNo, stringList, duration):
-        if (templateNo > 5):
-            return False
-        else:
-            return True
 
     def updateState(self, fileInput):
         displayStateIsNew = fileInput != self.factory.currentDisplayState
+        print 'DisplayStateIsNew: {0}'.format(displayStateIsNew)
         if fileInput in self.database and displayStateIsNew:
             self.writeStatus('NEW FILEINPUT {0}'.format(fileInput))
             print 'New FileInput {0}'.format(fileInput)
@@ -59,9 +56,5 @@ class FileReader(object):
         with open(self.outputFilePath, 'w') as f:
             f.write(status)
 
-    def getInput(self):
-        time.sleep(10)
-        return '2765750'
-
     def onTimeout(self):
-        self.writeStatus('TIMEOUT-SUCCESS')
+        self.observer.guiTimeout()

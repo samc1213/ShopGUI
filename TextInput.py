@@ -8,3 +8,9 @@ class TextInput(tk.Entry):
                             background=BACKGROUND_COLOR, foreground=TEXT_COLOR)
         self.grid(row=row, column=column)
         self.screen_height = screen_height
+
+    def clearText(self):
+        self.delete(0, 'end')
+
+    def getText(self):
+        return self.get()
