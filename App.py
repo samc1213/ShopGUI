@@ -51,7 +51,7 @@ if __name__ == '__main__':
                 handler = Handler(reader)
                 handler.StartWorkerThreads()
         else:
-            handler = Handler(reader)
+            handler = Handler(reader, observer)
             handler.StartWorkerThreads()
             mainGuiLoop(root)
     except Exception as e:

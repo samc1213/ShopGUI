@@ -11,7 +11,7 @@ from FPS_Class import FPS_Class
 
 
 class Handler(object):
-    def __init__(self, guiEditor):
+    def __init__(self, guiEditor, observer):
         self.LED = GPIO_Class()
         self.Button = GPIO_Class()
         self.TD = Thread_Data(guiEditor)
@@ -26,6 +26,11 @@ class Handler(object):
         # logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s',)
 
         self.running = False
+        self.observer = observer
+        self.observer.addTimeoutListener(self.onTimeout)
+
+    def onTimeout(self):
+        print 'THE HANDLER NOW KNOWS ABOUT A TIMEOUT :D'
 
     def DoWorkerThread(self):
         threads = []
