@@ -1,7 +1,7 @@
 
 
 class GuiObserver(object):
-    def __init__(sef):
+    def __init__(self):
         self.inputListeners = []
         self.timeoutListeners = []
 
@@ -10,10 +10,10 @@ class GuiObserver(object):
         for listener in self.timeoutListeners:
             listener()
 
-    def addInputListener(listener):
+    def addInputListener(self,listener):
         self.inputListeners.append(listener)
 
-    def addTimeoutListener(listener):
+    def addTimeoutListener(self,listener):
         self.timeoutListeners.append(listener)
 
     def guiInput(self, input):

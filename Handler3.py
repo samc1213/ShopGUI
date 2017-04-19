@@ -28,6 +28,7 @@ class Handler(object):
         self.running = False
         self.observer = observer
         self.observer.addTimeoutListener(self.onTimeout)
+        pass
 
     def onTimeout(self):
         print 'THE HANDLER NOW KNOWS ABOUT A TIMEOUT :D'

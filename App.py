@@ -26,7 +26,7 @@ def setUp():
     root = tk.Tk()
     root.overrideredirect(True)
     root.overrideredirect(False)
-    root.attributes('-fullscreen', True)
+    #root.attributes('-fullscreen', True)
     root.configure(background=BACKGROUND_COLOR)
 
     observer = GuiObserver()
@@ -47,8 +47,9 @@ if __name__ == '__main__':
                 testThread.start()
                 mainGuiLoop(root)
             elif arg.lower() == "handler":
+				#testing push
                 print 'Running in handler test mode...'
-                handler = Handler(reader)
+                handler = Handler(reader, observer)
                 handler.StartWorkerThreads()
         else:
             handler = Handler(reader, observer)
