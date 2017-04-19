@@ -16,8 +16,11 @@ button=18
 
 class GPIO_Class(object):
     def __init__(self):
-        GPIO.setwarnings(False)
-        pass
+		GPIO.setwarnings(False)
+		GPIO.setmode(GPIO.BOARD)
+		GPIO.setup(channel_list,GPIO.OUT,initial=GPIO.LOW)
+		GPIO.setup(button,GPIO.IN)
+		pass
 
     def All_off(self):
         for LED in channel_list:
@@ -51,12 +54,8 @@ class GPIO_Class(object):
         return GPIO.input(button)
     def Cleanup(self):
         GPIO.cleanup()
-    def InitButton(self):
-        GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(button,GPIO.IN)
-    def InitLED(self):
-        GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(channel_list,GPIO.OUT,initial=GPIO.LOW)
+
+
         
 
 
