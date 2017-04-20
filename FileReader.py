@@ -16,6 +16,7 @@ class FileReader(object):
 
     def onInput(self, input):
         print 'input received from display, {0}'.format(input)
+        self.observer.guiInput(input)
 
     def readDatabaseFile(self, databaseFilePath):
         print 'Reading database file'

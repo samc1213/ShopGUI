@@ -33,6 +33,8 @@ class Handler(object):
 		print 'THE HANDLER NOW KNOWS ABOUT A TIMEOUT :D'
 		self.FlowLogic('Welcome',1)
 
+
+
 	def DoWorkerThread(self):
 		threads = []
 
@@ -143,7 +145,14 @@ class Handler(object):
 		if display_state=='Welcome': #Do this after welcome has finished
 			if timeout_condition: #function called on timeout
 				self.TD.set_Sys_State("idle") 
-				self.guiEditor.updateState('Welcome')#stay on welcome screen
+				self.guiEditor.updateState('Choices')#stay on welcome screen
 			else:
-				self.guiEditor.updateState('HelloWorld')#if user has pressed enter, move on
+				self.guiEditor.updateState('PromptUserID')#if user has pressed enter, move on
+		if display_state=='PromptUserID': #Do this after welcome has finished
+			if timeout_condition: #function called on timeout
+				self.TD.set_Sys_State("idle") 
+				self.guiEditor.updateState('Welcome')#go to  welcome screen
+			else:
+				#self.guiEditor.updateState('PromptUserID')#if user has pressed enter, move on
+				print("user ID is")
 
