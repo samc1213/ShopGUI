@@ -21,7 +21,7 @@ class DisplayChoices(AbstractDisplay):
         self.choices = listOfChoices
         displayString = listOfChoices[0] + '\n'
         for choiceIndex in range(1, len(listOfChoices)):
-            displayString += '{0} - {1}\n'.format(choiceIndex, listOfChoices[choiceIndex])
+            displayString += '{0}\n'.format(listOfChoices[choiceIndex])
         self.sv.set(displayString)
 
     def hide(self):
