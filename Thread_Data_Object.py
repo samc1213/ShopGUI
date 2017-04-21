@@ -12,13 +12,14 @@ class Thread_Data(object):
 		pass
     def get_Sys_State(self):
         return self._Sys
+    def get_Display_State(self):
+        return self._Display
     def get_Alert_State(self):
         return self._Alert
     def set_Sys_State(self, new_sys):
         self._Sys = new_sys
     def set_Display_State(self, new_display):
 		self._Display = new_display
-		#self.guiEditor.updateState(new_display)
     def set_Alert_State(self,new_Alert):
         self._Alert = new_Alert
     def set_Sec_Count(self,new_Sec_Count):

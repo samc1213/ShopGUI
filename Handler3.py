@@ -33,13 +33,13 @@ class Handler(object):
 	def onTimeout(self):
 		print 'THE HANDLER NOW KNOWS ABOUT A TIMEOUT :D'
 		
-		self.FlowLogic(self.TD.get_Sys_State(),1)
+		self.FlowLogic(self.TD.get_Display_State(),1,"timeout")
 
 		
 	def onInput_H(self,input_from_GUI):
                 print 'THE HANDLER NOW KNOWS ABOUT AN INPUT :D'
 
-                self.FlowLogic(self.TD.get_Sys_State(),0)
+                self.FlowLogic(self.TD.get_Display_State(),0,input_from_GUI)
                 
 
 
@@ -61,7 +61,7 @@ class Handler(object):
 		#F.start()
 		T.start()
 
-		self.FlowLogic('Welcome1',1)
+		self.FlowLogic('Welcome1',1,"start")
 		while self.TD.get_Sec_Count() < 100:
 			if self.TD.get_Sec_Count() >= 70:
 				self.TD.set_Sys_State('shutdown')
@@ -151,26 +151,30 @@ class Handler(object):
 		GPIO.Cleanup()
 		logging.debug('Csense shutting Down')
 		
-	def FlowLogic(self,display_state,timeout_condition):
+	def FlowLogic(self,display_state,timeout_condition,Flow_input):
 		if display_state=='Welcome1': #Do this after welcome has finished
 			if timeout_condition: #function called on timeout
-				self.TD.set_Sys_State("Welcome2") 
+				self.TD.set_Display_State("Welcome2") 
 				self.guiEditor.updateState('Welcome2')#stay on welcome screen
 			else:
-                                self.TD.set_Sys_State("PromptUserID")        
-				self.guiEditor.updateState('PromptUserID')#if user has pressed enter, move on
-                if display_state=='Welcome2': #Do this after welcome has finished
+				self.TD.set_Display_State("Input")        
+				self.guiEditor.updateState('Input')#if user has pressed enter, move on
+
+		if display_state=='Welcome2': #Do this after welcome has finished
 			if timeout_condition: #function called on timeout
-				self.TD.set_Sys_State("Welcome1") 
+				self.TD.set_Display_State("Welcome1") 
 				self.guiEditor.updateState('Welcome1')#stay on welcome screen
 			else:
-                                self.TD.set_Sys_State("PromptUserID") 
-				self.guiEditor.updateState('PromptUserID')#if user has pressed 
-		if display_state=='PromptUserID': #Do this after welcome has finished
+				self.TD.set_Display_State("Input") 
+				self.guiEditor.updateState('Input')#if user has pressed 
+
+		if display_state=='Input': #Do this after welcome has finished
 			if timeout_condition: #function called on timeout
-				self.TD.set_Sys_State("Welcome1") 
+				self.TD.set_Display_State("Welcome1") 
 				self.guiEditor.updateState('Welcome1')#go to  welcome screen
 			else:
-				#self.guiEditor.updateState('PromptUserID')#if user has pressed enter, move on
-				print("user ID is")
+				print ("Flow Input = ",Flow_input)
+				self.TD.set_Display_State("Welcome1") 
+				self.guiEditor.updateState('Welcome1')#if user has pressed enter, move on
+
 
