@@ -13,12 +13,11 @@ class FileReader(object):
         self.factory = DisplayStateFactory(self.rootGUIWidget, self.onInput)
         self.observer = guiObserver
         self.timeoutTimer = None
+        self.timeoutTimer =Timer(10,  lambda: self.initialTimer())
 
     def onInput(self, input):
         print 'input received from display, {0}'.format(input)
         self.observer.guiInput(input)
-        self.timeoutTimer.cancel()
-        self.timeoutTimer = None
 
     def readDatabaseFile(self, databaseFilePath):
         print 'Reading database file'
@@ -49,7 +48,7 @@ class FileReader(object):
             print 'New FileInput {0}'.format(fileInput)
             dbEntry = self.database[fileInput]
             self.factory.updateDisplayState(dbEntry, fileInput)
-            self.timeoutTimer.clear()
+            self.timeoutTimer.cancel()
             self.timeoutTimer = None
             self.timeoutTimer = Timer(dbEntry['duration'], lambda: self.onTimeout())
             self.timeoutTimer.start()
@@ -63,3 +62,6 @@ class FileReader(object):
 
     def onTimeout(self):
         self.observer.guiTimeout()
+    def initialTimer(self):
+    	print 'initial timer'
+
