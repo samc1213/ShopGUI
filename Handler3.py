@@ -151,30 +151,45 @@ class Handler(object):
 		GPIO.Cleanup()
 		logging.debug('Csense shutting Down')
 		
-	def FlowLogic(self,display_state,timeout_condition,Flow_input):
+	def FlowLogic(self,display_state,timeout_condition,flow_input):
 		if display_state=='Welcome1': #Do this after welcome has finished
 			if timeout_condition: #function called on timeout
 				self.TD.set_Display_State("Welcome2") 
 				self.guiEditor.updateState('Welcome2')#stay on welcome screen
 			else:
-				self.TD.set_Display_State("Input")        
-				self.guiEditor.updateState('Input')#if user has pressed enter, move on
+				self.TD.set_Display_State("PromptUserID")        
+				self.guiEditor.updateState('PromptUserID')#if user has pressed 1, move on
 
-		if display_state=='Welcome2': #Do this after welcome has finished
+		elif display_state=='Welcome2': #Do this after welcome has finished
 			if timeout_condition: #function called on timeout
 				self.TD.set_Display_State("Welcome1") 
 				self.guiEditor.updateState('Welcome1')#stay on welcome screen
 			else:
-				self.TD.set_Display_State("Input") 
-				self.guiEditor.updateState('Input')#if user has pressed 
+				self.TD.set_Display_State("PromptUserID") 
+				self.guiEditor.updateState('PromptUserID')#if user has pressed 1 move on
 
-		if display_state=='Input': #Do this after welcome has finished
+		elif display_state=='PromptUserID': #Do this after welcome has finished
 			if timeout_condition: #function called on timeout
 				self.TD.set_Display_State("Welcome1") 
 				self.guiEditor.updateState('Welcome1')#go to  welcome screen
 			else:
-				print ("Flow Input = ",Flow_input)
-				self.TD.set_Display_State("Welcome1") 
-				self.guiEditor.updateState('Welcome1')#if user has pressed enter, move on
+				ID = int(flow_input)
+				if self.Check_ID_is_7_digits(ID):
+					Training_Level=self.AuthorizationDatabase(ID)
+					if Training_Level==0:
+						self.TD.set_Display_State("UserNotFound") 
+						self.guiEditor.updateState('UserNotFound')
+				else: #if ID is not 7 digits
+					self.TD.set_Display_State("ID_Not_Valid") 
+					self.guiEditor.updateState('ID_Not_Valid')
+
+
+
+	def Check_ID_is_7_digits(self,ID): #function makes sure ID number is correct
+		if ID>999999:
+			return ID<10000000
+	def AuthorizationDatabase(self,ID): #function reads database for training level
+		#function not yet implemented, enter a training level to return for testing purposes
+		return 0
 
 
