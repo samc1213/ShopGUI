@@ -17,6 +17,8 @@ class FileReader(object):
     def onInput(self, input):
         print 'input received from display, {0}'.format(input)
         self.observer.guiInput(input)
+        self.timeoutTimer.cancel()
+        self.timeoutTimer = None
 
     def readDatabaseFile(self, databaseFilePath):
         print 'Reading database file'
@@ -47,6 +49,8 @@ class FileReader(object):
             print 'New FileInput {0}'.format(fileInput)
             dbEntry = self.database[fileInput]
             self.factory.updateDisplayState(dbEntry, fileInput)
+            self.timeoutTimer.clear()
+            self.timeoutTimer = None
             self.timeoutTimer = Timer(dbEntry['duration'], lambda: self.onTimeout())
             self.timeoutTimer.start()
         elif displayStateIsNew:
