@@ -1,6 +1,7 @@
 from Constants import BIG_FONT_HEIGHT_FRACTION
 from TextInput import TextInput
-from Tkinter import PhotoImage
+from TextLabel import TextLabel
+from Tkinter import PhotoImage, StringVar
 import Tkinter as tk
 from PIL import Image, ImageTk
 from AbstractDisplay import AbstractDisplay
@@ -9,8 +10,18 @@ from AbstractDisplay import AbstractDisplay
 class DisplayEntry(AbstractDisplay):
     def __init__(self, master, screen_height, onInput):
         master.grid_columnconfigure(0, weight=1)
+        # padding row
         master.grid_rowconfigure(0, weight=1)
-        self.input = TextInput(master, 0, 0, screen_height, BIG_FONT_HEIGHT_FRACTION)
+        # input prompt row
+        master.grid_rowconfigure(1, weight=1)
+        # input row
+        master.grid_rowconfigure(2, weight=1)
+        # padding row
+        master.grid_rowconfigure(3, weight=1)
+        self.input = TextInput(master, 2, 0, screen_height, BIG_FONT_HEIGHT_FRACTION)
+        self.sv = StringVar()
+        self.sv.set('')
+        self.prompt = TextLabel(master, self.sv, 1, 0, screen_height, BIG_FONT_HEIGHT_FRACTION)
         self.onInput = onInput
         master.bind("<Return>", self.onReturn)
 
@@ -24,3 +35,6 @@ class DisplayEntry(AbstractDisplay):
 
     def show(self):
         self.input.grid()
+
+    def updatePrompt(self, newText):
+        self.sv.set(newText)

@@ -14,10 +14,10 @@ from GuiObserver import GuiObserver
 
 def test(reader):
     reader.updateState('Input')
-    time.sleep(3)
-    reader.updateState('EyeImage')
-    time.sleep(1)
-    reader.updateState('Input')
+    # time.sleep(3)
+    # reader.updateState('EyeImage')
+    # time.sleep(1)
+    # reader.updateState('Input')
 
 def mainGuiLoop(root):
     root.mainloop()
@@ -36,28 +36,28 @@ def setUp():
 
 
 if __name__ == '__main__':
-	try:
-		reader, root, observer = setUp()
+    try:
+        reader, root, observer = setUp()
 
-		if len(sys.argv) == 2:
-			arg = sys.argv[1]
-			if arg.lower() == "gui":
-				print 'Running in GUI test mode...'
-				testThread = threading.Thread(name='Alert', target=test, args=(reader,))
-				testThread.start()
-				mainGuiLoop(root)
-			elif arg.lower() == "handler":
-				#testing push
-				print 'Running in handler test mode...'
-				handler = Handler(reader, observer)
-				handler.StartWorkerThreads()
-		else:
-			handler = Handler(reader, observer)
-			handler.StartWorkerThreads()
-			mainGuiLoop(root)
-	except Exception as e:
-		print e
-	finally:
-		time.sleep(2)
-		running = False
-		raise
+        if len(sys.argv) == 2:
+            arg = sys.argv[1]
+            if arg.lower() == "gui":
+                print 'Running in GUI test mode...'
+                testThread = threading.Thread(name='Alert', target=test, args=(reader,))
+                testThread.start()
+                mainGuiLoop(root)
+            elif arg.lower() == "handler":
+                #testing push
+                print 'Running in handler test mode...'
+                handler = Handler(reader, observer)
+                handler.StartWorkerThreads()
+        else:
+            handler = Handler(reader, observer)
+            handler.StartWorkerThreads()
+            mainGuiLoop(root)
+    except Exception as e:
+        print e
+    finally:
+        time.sleep(2)
+        running = False
+        raise

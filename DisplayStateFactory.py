@@ -52,5 +52,6 @@ class DisplayStateFactory(object):
         elif databaseEntry['templateNo'] == 5:
             self.currentDisplayState = fileInput
             self.displayEntry.show()
+            self.displayEntry.updatePrompt(databaseEntry['stringList'][0])
         else:
             raise 'Invalid templateNo: {0}'.format(databaseEntry['templateNo'])
