@@ -9,12 +9,13 @@ from PIL import Image, ImageTk
 
 class DisplayStateFactory(object):
     def __init__(self, root, onInput):
+        self.root = root
         self.currentDisplayState = None
         self.onInput = onInput
-        self.displayMessage = DisplayMessage(root, root.winfo_screenheight())
+        self.displayMessage = DisplayMessage(root, root.winfo_screenheight(), self.onInput)
         photo = Image.open(DEFAULT_DISPLAYIMAGE_FILEPATH)
         pilPhoto = ImageTk.PhotoImage(photo)
-        self.displayImage = DisplayImage(root, root.winfo_screenheight(), pilPhoto)
+        self.displayImage = DisplayImage(root, root.winfo_screenheight(), pilPhoto, self.onInput)
         self.displayVideo = DisplayVideo(root, root.winfo_screenheight(), pilPhoto)
         self.displayChoices = DisplayChoices(root, root.winfo_screenheight(), self.onInput)
         self.displayEntry = DisplayEntry(root, root.winfo_screenheight(), onInput)
@@ -31,6 +32,7 @@ class DisplayStateFactory(object):
     def updateDisplayState(self, databaseEntry, fileInput):
         if self.currentDisplayState != fileInput:
             self.clearDisplay()
+            self.root.configure(background=databaseEntry['color'])
         if databaseEntry['templateNo'] == 1:
             self.displayMessage.updateText(databaseEntry['stringList'][0])
             self.currentDisplayState = fileInput

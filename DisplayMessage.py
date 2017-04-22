@@ -5,12 +5,17 @@ from AbstractDisplay import AbstractDisplay
 
 
 class DisplayMessage(AbstractDisplay):
-    def __init__(self, master, screen_height):
+    def __init__(self, master, screen_height, onInput):
         master.grid_columnconfigure(0, weight=1)
         master.grid_rowconfigure(0, weight=1)
         self.sv = StringVar()
         self.sv.set('')
         self.bigLabel = TextLabel(master, self.sv, 0, 0, screen_height, BIG_FONT_HEIGHT_FRACTION)
+        self.onInput = onInput
+        master.bind("<Return>", self.onReturn)
+
+    def onReturn(self, event):
+        self.onInput('')
 
     def updateText(self, newText):
         self.sv.set(newText)

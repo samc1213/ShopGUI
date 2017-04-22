@@ -1,13 +1,13 @@
-DisplayState,Template #,StringList(; delimited),Duration,FileAddress
-HelloWorld,1,Hello World,20,
-hiWelcome1,4,Welcome1;Press 1 to continue,10,
-Welcome2,4,Welcome2;Press 1 to continue,10,
-PromptUserID,5,Enter ID,30,
-Welcome1,2,,10,images/testimage.jpg
-OkGo,3,,10,images/image-{NUMBER}.jpeg
-Test,2,,10,images/image-0001.jpeg
-Choices,4,choose a choice:;choice1;choice2;choice3,10,
-Input,5,ID =,30,
-UserNotFound,1,User Not Found,10,
-ID_Not_Valid,1,ID not Valid, 4, 
-FingerPrompt,1,PUT YO FINGER YO YO YO YO,10,
+DisplayState,Template #,StringList(; delimited),Duration,FileAddress,BackgroundColor
+HelloWorld,1,Hello World,20,,#4E2A84
+hiWelcome1,4,Welcome1;Press 1 to continue,10,,#4E2A84
+Welcome2,4,Welcome2;Press 1 to continue,10,,#4E2A84
+PromptUserID,5,Enter ID,30,,#4E2A84
+Welcome1,2,,10,images/testimage.jpg,#4E2A84
+OkGo,3,,10,images/image-{NUMBER}.jpeg,#4E2A84
+Test,2,,10,images/image-0001.jpeg,#4E2A84
+Choices,4,choose a choice:;choice1;choice2;choice3,10,,#4E2A84
+Input,5,ID =,30,,#ffffff
+UserNotFound,1,User Not Found,10,,#4E2A84
+ID_Not_Valid,1,ID not Valid, 4,,#4E2A84
+FingerPrompt,1,PUT YO FINGER YO YO YO YO,10,,#4E2A84

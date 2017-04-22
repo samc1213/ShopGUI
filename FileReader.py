@@ -26,7 +26,7 @@ class FileReader(object):
         self.database = {}
         for row in newText.split('\n')[1:]:
             rowSplit = row.split(DATABASE_FILE_DELIMITER)
-            if (len(rowSplit) != 5):
+            if (len(rowSplit) != 6):
                 print 'Skipping row. Length incorrect. {0}'.format(row)
                 continue
             try:
@@ -35,10 +35,11 @@ class FileReader(object):
                 stringList = rowSplit[2].split(STRING_LIST_DELIMITER)
                 duration = int(rowSplit[3].strip())
                 fileAddress = rowSplit[4].strip()
+                color = rowSplit[5].strip()
             except Exception as ex:
                 print 'There was a problem parsing the database row: {0}. {1}'.format(row, str(ex))
                 continue
-            self.database[displayState] = {'templateNo': templateNo, 'stringList': stringList, 'duration': duration, 'fileAddress': fileAddress}
+            self.database[displayState] = {'templateNo': templateNo, 'stringList': stringList, 'duration': duration, 'fileAddress': fileAddress, 'color': color}
 
     def updateState(self, fileInput):
         displayStateIsNew = fileInput != self.factory.currentDisplayState
