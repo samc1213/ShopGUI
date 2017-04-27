@@ -30,7 +30,7 @@ def setUp():
     root = tk.Tk()
     root.overrideredirect(True)
     root.overrideredirect(False)
-    #root.attributes('-fullscreen', True)
+    root.attributes('-fullscreen', True)
     root.configure(background=BACKGROUND_COLOR)
 
     observer = GuiObserver()
@@ -62,6 +62,6 @@ if __name__ == '__main__':
     except Exception as e:
         print e
     finally:
-        time.sleep(2)
         running = False
+        root.destroy()
         raise

@@ -6,7 +6,7 @@ class Thread_Data(object):
 		self._Sys = 'IDLE'
 		self._Alert = 'blue_'
 		self._Display = 'HelloWorld'
-		#self.guiEditor.updateState('HelloWorld')
+		self._ID='1234567'
 		self._Sec_Count = 0
 		#self.guiEditor = guiEditor
 		pass

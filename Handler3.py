@@ -9,6 +9,7 @@ from GPIO_Class import GPIO_Class
 from Thread_Data_Object import Thread_Data
 from FPS_Class import FPS_Class
 GPIO = GPIO_Class()
+threads = []
 
 class Handler(object):
 	def __init__(self, guiEditor, observer):
@@ -45,10 +46,10 @@ class Handler(object):
 
 
 	def DoWorkerThread(self):
-		threads = []
+
 
 		C = threading.Thread(name='Csense', target=self.Csense)
-		#F = threading.Thread(name='FPS', target=self.Fingerprint)
+		
 		T = threading.Thread(name='Timer', target=self.Timer, args=(300,))
 
 
@@ -83,35 +84,17 @@ class Handler(object):
 		
 
 	def Fingerprint(self):
-		Sys=self.TD.get_Sys_State()
-		counter=0
-		while Sys!='shutdown' and self.running:
-			logging.debug('IDLE')
-			if Sys=='enroll':
-				logging.debug('enroll')
-				ID=input('Enter 7 digit ID Number: \n')
-				OW=input('Enable Overwrite: \n(1-enable, 0-disable)\n')
-				self.fps.FPS_Get_Template(ID,OW)
-				self.TD.set_Sys_State('idle')
-				logging.debug('Changing sys to idle')
-			if Sys=='identify':
-				logging.debug('IDENTIFY')
-				ID = 2765750;
-				self.TD.set_Display_State('FingerPrompt')
-				if self.fps.FPS_Identify(ID):
-					self.TD.set_Display_State('UserFound')
-					self.TD.set_Alert_State('green')
-					logging.debug('Changing alert to green')
-					self.TD.set_Sys_State('idle')
-					logging.debug('Changing sys to idle')
-				else:
-					self.TD.set_Display_State('UserNotFound')
-			Sys = self.TD.get_Sys_State()
-			time.sleep(.5)
-			counter = counter+1
-			if counter==300:
-				sys.exit(0)
-		logging.debug('Fingerprint shutting Down')
+		ID=self.TD._ID
+		print 'entering identify thread'
+		if self.fps.FPS_Identify(ID):
+			print "userfound"
+			self.TD.set_Display_State('UseMachine1')
+			self.guiEditor.updateState('UseMachine1')
+		else:
+			print "usernotfound"
+			self.TD.set_Display_State('NoMatch1')
+			self.guiEditor.updateState('NoMatch1')
+
 
 	def Alert(self,LED_COLOR):
 		logging.debug('updating LED')
@@ -152,7 +135,9 @@ class Handler(object):
 		logging.debug('Csense shutting Down')
 		
 	def FlowLogic(self,display_state,timeout_condition,flow_input):
-                flow_input=int(flow_input)
+		if type(flow_input)==type(''):
+			if len(flow_input)>0:
+				flow_input=int(flow_input)
 
 		if display_state=='Welcome1': #Do this after welcome has finished
 				if timeout_condition: #function called on timeout
@@ -182,14 +167,17 @@ class Handler(object):
 							self.TD.set_Display_State("UserNotFound") 
 							self.guiEditor.updateState('UserNotFound')
 						elif Training_Level==1:
-						    self.TD.set_Display_State("NotAuthorized")
-						    self.guiEditor.updateState('NotAuthorized')
+							self.TD._ID=ID
+							self.TD.set_Display_State("NotAuthorized")
+							self.guiEditor.updateState('NotAuthorized')
 						elif Training_Level==2:
-						    self.TD.set_Display_State('FurtherTraining')
-						    self.guiEditor.updateState('FurtherTraining')
+							self.TD._ID=ID
+							self.TD.set_Display_State('FurtherTraining')
+							self.guiEditor.updateState('FurtherTraining')
 						elif Training_Leve==3:
-						    self.TD.set_Display_State('Authorized')
-						    self.guiEditor.updateState('Authorized')                             
+							self.TD._ID=ID
+							self.TD.set_Display_State('Authorized')
+							self.guiEditor.updateState('Authorized')                             
 					else: #if ID is not 7 digits
 						self.TD.set_Display_State("ID_Not_Valid") 
 						self.guiEditor.updateState('ID_Not_Valid')
@@ -228,11 +216,12 @@ class Handler(object):
 
 		elif display_state=='FurtherTraining':
 				if timeout_condition:
-				        self.TD.set_Display_State('Logout')
-				        self.guiEditor.updateState('Logout')
+					self.TD.set_Displapy_State('Logout')
+					self.guiEditor.updateState('Logout')
 				else:
-				        self.TD.set_Display_State('VidOption')
-				        self.guiEditor.updateState('VidOption')
+					self.TD.set_Display_State('VidOption')
+					self.guiEditor.updateState('VidOption')
+
 
 		elif display_state=='VidOption':
 				if timeout_condition:
@@ -240,110 +229,94 @@ class Handler(object):
 				        self.guiEditor.updateState('Logout')
 				else:
 				        if flow_input==1:
-				                self.TD.set_Display_State('Video')
-				                self.guiEditor.updateState('Video')
+							self.TD.set_Display_State('Video_Prep1')
+							self.guiEditor.updateState('Video_Prep1')
 				        if flow_input==2:
-				                self.TD.set_Display_State('fpsInput2')
-				                self.guiEditor.updateState('fpsInput2')
+							self.IdentifyUser()
+							self.TD.set_Display_State('fpsInput1')
+							self.guiEditor.updateState('fpsInput1')
 
-		elif display_state=='Video':
-				self.TD.set_Display_State('fpsInput2')
-				self.guiEditor.updateState('fpsInput2')
+		elif display_state=='Video_Prep1':
+				self.TD.set_Display_State('Video1')
+				self.guiEditor.updateState('Video1')
+
+		elif display_state=='Video1':
+				self.IdentifyUser()
+				self.TD.set_Display_State('fpsInput1')
+				self.guiEditor.updateState('fpsInput1')
 
 		elif display_state=='Authorized':
-				if timeout_condition:
-				        self.TD.set_Display_State('Logout')
-				        self.guiEditor.updateState('Logout')
-				else:
-				        self.TD.set_Display_STate('fpsInput1')
-				        self.guiEditor.updateState('fpsInput1')
+				self.IdentifyUser()
+				self.TD.set_Display_STate('fpsInput1')
+				self.guiEditor.updateState('fpsInput1')
 
 		elif display_state=='fpsInput1':
-				FP_Temp=self.VerificationDatabase(1)
-				# if row locations of FP and ID in respective databases match, then FP is valid
-				if FP_Tempp==0:
-				        self.TD.set_Display_State('NotRead1')
-				        self.guiEditor.updateState('NotRead1')
-				elif FP_Temp==1:
-				        self.TD.set_Display_State('NoMatch1')
-				        self.guiEditor.updateState('NoMatch1')
-				elif FP_Temp==2:
-				        self.TD.set_Display_State('UseMachine1')
-				        self.guiEditor.updateState('UseMachine1')
+				self.TD.set_Display_State('Logout')
+				self.guiEditor.updateState('Logout')
 
-		elif display_state=='fpsInput2':
-				FP_Temp=self.VerficiationDatabase(1)
-				if FP_Temp==0:
-				        self.TD.set_Display_State('NotRead2')
-				        self.guiEditor.updateState('NotRead2')
-				elif FP_Temp==1:
-				        self.TD.set_Display_State('NoMatch2')
-				        self.guiEdiotr.updateState('NoMatch2')
-				elif FP_Temp==2:
-				        self.TD.set_Display_State('UseMachine2')
-				        self.guiEditor.updateState('UseMachine2')
                 
 		elif display_state=='UseMachine1':
 				if timeout_condition:
 				        self.TD.set_Display_State('Logout')
-				        self.guieditor.updateState('Logout')
-				else:
-				        self.TD.set_Display_State('Logout')
-				        self.guieditor.updateState('Logout')
-
-		elif display_state=='NotRead1':
-				if timeoout_condition:
-				        self.TD.set_Display_State('Logout')
 				        self.guiEditor.updateState('Logout')
 				else:
-				        if flow_input==1:
-				                self.TD.set_Display_State('fpsInput1')
-				                self.guiEditor.updateState('fpsInput1')
-				        elif flow_input==2:
-				                self.TD.set_Display_State('Logout')
-				                self.guiEditor.updateState('Logout')
+				        self.TD.set_Display_State('Logout')
+				        self.guiEditor.updateState('Logout')
+
+		# elif display_state=='NotRead1':
+		# 		if timeoout_condition:
+		# 		        self.TD.set_Display_State('Logout')
+		# 		        self.guiEditor.updateState('Logout')
+		# 		else:
+		# 		        if flow_input==1:
+		# 		                self.TD.set_Display_State('fpsInput1')
+		# 		                self.guiEditor.updateState('fpsInput1')
+		# 		        elif flow_input==2:
+		# 		                self.TD.set_Display_State('Logout')
+		# 		                self.guiEditor.updateState('Logout')
 
 		elif display_state=='NoMatch1':
 				if timeout_condition:
 				    self.TD.set_Display_State('Logout')
-				    self.guieditor.updateState('Logout')
-				else:
-				    if flow_input==1:
-				            self.TD.set_Display_State('fpsInput1')
-				            self.guieditor.updateState('fpsInput1')
-				    elif flow_input==2:
-				            self.TD.set_Display_State('Logout')
-				            self.guieditor.updateState('Logout')
-
-		elif display_state=='UseMachine2':
-				if timeout_condition:
-				    self.TD.set_Display_State('Logout')
-				    self.guieditor.updateState('Logout')
-				else:
-				    self.TD.set_Display_State('Logout')
-				    self.guieditor.updateState('Logout')
-		elif display_state=='NotRead2':
-				if timeoout_condition:
-				    self.TD.set_Display_State('Logout')
 				    self.guiEditor.updateState('Logout')
 				else:
 				    if flow_input==1:
-				        self.TD.set_Display_State('fpsInput2')
-				        self.guiEditor.updateState('fpsInput2')
+						self.IdentifyUser()
+						self.TD.set_Display_State('fpsInput1')
+						self.guiEditor.updateState('fpsInput1')
 				    elif flow_input==2:
-				        self.TD.set_Display_State('Logout')
-				        self.guiEditor.updateState('Logout')
-		elif display_state=='NoMatch2':
-				if timeout_condition:
-				    self.TD.set_Display_State('Logout')
-				    self.guieditor.updateState('Logout')
-				else:
-				    if flow_input==1:
-				        self.TD.set_Display_State('fpsInput2')
-				        self.guieditor.updateState('fpsInput2')
-				    elif flow_input==2:
-				        self.TD.set_Display_State('Logout')
-				        self.guieditor.updateState('Logout')
+						self.TD.set_Display_State('Logout')
+						self.guiEditor.updateState('Logout')
+
+		# elif display_state=='UseMachine2':
+		# 		if timeout_condition:
+		# 		    self.TD.set_Display_State('Logout')
+		# 		    self.guieditor.updateState('Logout')
+		# 		else:
+		# 		    self.TD.set_Display_State('Logout')
+		# 		    self.guieditor.updateState('Logout')
+		# elif display_state=='NotRead2':
+		# 		if timeoout_condition:
+		# 		    self.TD.set_Display_State('Logout')
+		# 		    self.guiEditor.updateState('Logout')
+		# 		else:
+		# 		    if flow_input==1:
+		# 		        self.TD.set_Display_State('fpsInput2')
+		# 		        self.guiEditor.updateState('fpsInput2')
+		# 		    elif flow_input==2:
+		# 		        self.TD.set_Display_State('Logout')
+		# 		        self.guiEditor.updateState('Logout')
+		# elif display_state=='NoMatch2':
+		# 		if timeout_condition:
+		# 		    self.TD.set_Display_State('Logout')
+		# 		    self.guieditor.updateState('Logout')
+		# 		else:
+		# 		    if flow_input==1:
+		# 		        self.TD.set_Display_State('fpsInput2')
+		# 		        self.guieditor.updateState('fpsInput2')
+		# 		    elif flow_input==2:
+		# 		        self.TD.set_Display_State('Logout')
+		# 		        self.guieditor.updateState('Logout')
                         
                         
 
@@ -352,10 +325,12 @@ class Handler(object):
 			return ID<10000000
 	def AuthorizationDatabase(self,ID): #function reads database for training level
 		#function not yet implemented, enter a training level to return for testing purposes
-		return 1
-	def VerificationDatabase(self,FP): #function reads database for fingerprint template
+		return 2
+	def IdentifyUser(self): #function reads database for fingerprint template
                 #function returns 0 if not read, 1 if doesn't match, 2 if matches                                                                                                                                                       
                 #function not yet implemented, enter a fingerprint template to return for testing purposes
-		return 1
+		F = threading.Thread(name='FPS', target=self.Fingerprint)
+		threads.append(F)
+		F.start()
 
 

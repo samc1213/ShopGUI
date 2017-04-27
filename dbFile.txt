@@ -14,8 +14,10 @@ FurtherTraining,1,You are authorized;but may require;additional training;;Press 
 Authorized,1,You are authorized to use this machine;;Press enter to proceed,30,,#4E2A84
 VidOption,4, How would you like to proceed?;;1-Watch tutorial video;2-Use machine,30,,#4E2A84
 Video,2,,10,images/testimage.jpg,#4E2A84
-fpsInput1,1,Please scan fingerprint,30,,#4E2A84
-fpsInput2,1,Please scan fingerprint,30,,#4E2A84
+Video_Prep1,1,,1,,#4E2A84
+Video1,3,,5,images/image-{NUMBER}.jpeg,#4E2A84
+fpsInput1,1,Please scan fingerprint,40,,#4E2A84
+fpsInput2,1,Please scan fingerprint,40,,#4E2A84
 NotRead1,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
 NotRead2,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
 NoMatch1,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
