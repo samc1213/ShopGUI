@@ -1,14 +1,27 @@
 DisplayState,Template #,StringList(; delimited),Duration,FileAddress,BackgroundColor
 HelloWorld,1,Hello World,20,,#4E2A84
-HiWelcome1,1,Welcome1;Press enter to continue,10,,#ff0000
+Welcome1,4,Welcome1;Press 1 to continue,10,,#4E2A84
 Welcome2,4,Welcome2;Press 1 to continue,10,,#4E2A84
-Welcome3,4,Welcome2;Press 1 to continue,1,,#4E2A84
-PromptUserID,5,Enter ID,10,,#ff0000
-HEWelcome1,2,,10,images/testimage.jpg,#4E2A84
-Welcome1,3,,10,images/image-{NUMBER}.jpeg,#4E2A84
+PromptUserID,5,Enter ID,30,,#4E2A84
+eyeImage,2,,10,images/testimage.jpg,#4E2A84
+OkGo,3,,10,images/image-{NUMBER}.jpeg,#4E2A84
 Test,2,,10,images/image-0001.jpeg,#4E2A84
 Choices,4,choose a choice:;choice1;choice2;choice3,10,,#4E2A84
-Input,5,ID =,30,,#ffffff
-UserNotFound,1,User Not Found,10,,#4E2A84
-ID_Not_Valid,1,ID not Valid, 4,,#4E2A84
-FingerPrompt,1,PUT YO FINGER YO YO YO YO,10,,#4E2A84
+Input,5,ID =,30,,#4E2A84
+UserNotFound,4,User Not Found;1-Retry login;2-Logout,30,,#4E2A84
+NotAuthorized,1,You are not authorized;to use this machine;;Press enter to log out,10,,#4E2A84
+FurtherTraining,1,You are authorized;but may require;additional training;;Press enter to proceed,30,,#4E2A84
+Authorized,1,You are authorized to use this machine;;Press enter to proceed,30,,#4E2A84
+VidOption,4, How would you like to proceed?;;1-Watch tutorial video;2-Use machine,30,,#4E2A84
+Video,2,,10,images/testimage.jpg,#4E2A84
+fpsInput1,1,Please scan fingerprint,30,,#4E2A84
+fpsInput2,1,Please scan fingerprint,30,,#4E2A84
+NotRead1,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
+NotRead2,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
+NoMatch1,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
+NoMatch2,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
+UseMachine1,1,You may now use the machine;;Press enter to logout,1800,,#4E2A84
+UseMachine2,1,You may now use the machine;but may require additional training;;Press enter to logout,1800,,#4E2A84
+Logout,1,Logging Out,3,,#4E2A84
+ID_Not_Valid,4,ID not Valid;1-Retry login;2-Logout,30,,#4E2A84 
+

@@ -33,7 +33,7 @@ class Handler(object):
 	def onTimeout(self):
 		print 'THE HANDLER NOW KNOWS ABOUT A TIMEOUT :D'
 		
-		self.FlowLogic(self.TD.get_Display_State(),1,"timeout")
+		self.FlowLogic(self.TD.get_Display_State(),1,9999)#9999 is default for timeout
 
 		
 	def onInput_H(self,input_from_GUI):
@@ -61,7 +61,7 @@ class Handler(object):
 		#F.start()
 		T.start()
 
-		self.FlowLogic('Welcome1',1,"start")
+		self.FlowLogic('Welcome1',1,9999)
 		while self.TD.get_Sec_Count() < 100:
 			if self.TD.get_Sec_Count() >= 70:
 				self.TD.set_Sys_State('shutdown')
@@ -152,51 +152,210 @@ class Handler(object):
 		logging.debug('Csense shutting Down')
 		
 	def FlowLogic(self,display_state,timeout_condition,flow_input):
+                flow_input=int(flow_input)
+
 		if display_state=='Welcome1': #Do this after welcome has finished
-			if timeout_condition: #function called on timeout
-				self.TD.set_Display_State("Welcome2") 
-				self.guiEditor.updateState('Welcome2')#stay on welcome screen
-			else:
-				self.TD.set_Display_State("PromptUserID")        
-				self.guiEditor.updateState('PromptUserID')#if user has pressed 1, move on
+				if timeout_condition: #function called on timeout
+					self.TD.set_Display_State("Welcome2") 
+					self.guiEditor.updateState('Welcome2')#stay on welcome screen
+				else:
+					self.TD.set_Display_State("PromptUserID")        
+					self.guiEditor.updateState('PromptUserID')#if user has pressed 1, move on
 
 		elif display_state=='Welcome2': #Do this after welcome has finished
-			if timeout_condition: #function called on timeout
-				self.TD.set_Display_State("Welcome1") 
-				self.guiEditor.updateState('Welcome1')#stay on welcome screen
-			else:
-				self.TD.set_Display_State("Welcome3") 
-				self.guiEditor.updateState('Welcome3')#if user has pressed 1 move on
-		elif display_state=='Welcome3': #Do this after welcome has finished
-			if timeout_condition: #function called on timeout
-				self.TD.set_Display_State("Welcome1") 
-				self.guiEditor.updateState('Welcome1')#stay on welcome screen
-			else:
-				self.TD.set_Display_State("Welcome3") 
-				self.guiEditor.updateState('Welcome3')#if user has pressed 1 move on
+				if timeout_condition: #function called on timeout
+					self.TD.set_Display_State("Welcome1") 
+					self.guiEditor.updateState('Welcome1')#stay on welcome screen
+				else:
+					self.TD.set_Display_State("PromptUserID") 
+					self.guiEditor.updateState('PromptUserID')#if user has pressed 1 move on
 
-		elif display_state=='PromptUserID': #Do this after welcome has finished
-			if timeout_condition: #function called on timeout
-				self.TD.set_Display_State("Welcome1") 
-				self.guiEditor.updateState('Welcome1')#go to  welcome screen
-			else:
-				ID = int(flow_input)
-				# if self.Check_ID_is_7_digits(ID):
-				# 	Training_Level=self.AuthorizationDatabase(ID)
-				# 	if Training_Level==0:
-				# 		self.TD.set_Display_State("OkGo") 
-				# 		self.guiEditor.updateState('OkGo')
-				# else: #if ID is not 7 digits
-				# 	self.TD.set_Display_State("ID_Not_Valid") 
-				# 	self.guiEditor.updateState('ID_Not_Valid')
+		elif display_state=='PromptUserID': #Do this after PromptUserID has finished
+				if timeout_condition: #function called on timeout
+					self.TD.set_Display_State("Welcome1") 
+					self.guiEditor.updateState('Welcome1')#go to  welcome screen
+				else:
+					ID = flow_input
+					if self.Check_ID_is_7_digits(ID):
+						Training_Level=self.AuthorizationDatabase(ID)
+						if Training_Level==0:
+							self.TD.set_Display_State("UserNotFound") 
+							self.guiEditor.updateState('UserNotFound')
+						elif Training_Level==1:
+						    self.TD.set_Display_State("NotAuthorized")
+						    self.guiEditor.updateState('NotAuthorized')
+						elif Training_Level==2:
+						    self.TD.set_Display_State('FurtherTraining')
+						    self.guiEditor.updateState('FurtherTraining')
+						elif Training_Leve==3:
+						    self.TD.set_Display_State('Authorized')
+						    self.guiEditor.updateState('Authorized')                             
+					else: #if ID is not 7 digits
+						self.TD.set_Display_State("ID_Not_Valid") 
+						self.guiEditor.updateState('ID_Not_Valid')
 
+		elif display_state=='ID_Not_Valid':
+				if timeout_condition: #function called on timeout
+				        self.TD.set_Display_State('Logout')
+				        self.guiEditor.updateState('Logout')
+				else:
+				        if flow_input==1:
+				                self.TD.set_Display_State("PromptUserID") 
+				                self.guiEditor.updateState('PromptUserID')
+				        elif flow_input==2:
+				                self.TD.set_Display_State('Logout')
+				                self.guiEditor.updateState('Logout')
 
+		elif display_state=='UserNotFound':
+				if timeout_condition: #function called on timeout
+				        self.TD.set_Display_State('Logout')
+				        self.guiEditor.updateState('Logout')
+				else:
+				        if flow_input==1:
+				                self.TD.set_Display_State("PromptUserID") 
+				                self.guiEditor.updateState('PromptUserID')
+				        elif flow_input==2:
+				                self.TD.set_Display_State('Logout')
+				                self.guiEditor.updateState('Logout')
+
+		elif display_state =='NotAuthorized':#Do this after NotAuthorized has finished
+				self.TD.set_Display_State('Logout')
+				self.guiEditor.updateState('Logout')
+
+		elif display_state =='Logout': #Do this after NotAuthorized has finished
+				self.TD.set_Display_State('Welcome1')
+				self.guiEditor.updateState('Welcome1')
+
+		elif display_state=='FurtherTraining':
+				if timeout_condition:
+				        self.TD.set_Display_State('Logout')
+				        self.guiEditor.updateState('Logout')
+				else:
+				        self.TD.set_Display_State('VidOption')
+				        self.guiEditor.updateState('VidOption')
+
+		elif display_state=='VidOption':
+				if timeout_condition:
+				        self.TD.set_Displapy_State('Logout')
+				        self.guiEditor.updateState('Logout')
+				else:
+				        if flow_input==1:
+				                self.TD.set_Display_State('Video')
+				                self.guiEditor.updateState('Video')
+				        if flow_input==2:
+				                self.TD.set_Display_State('fpsInput2')
+				                self.guiEditor.updateState('fpsInput2')
+
+		elif display_state=='Video':
+				self.TD.set_Display_State('fpsInput2')
+				self.guiEditor.updateState('fpsInput2')
+
+		elif display_state=='Authorized':
+				if timeout_condition:
+				        self.TD.set_Display_State('Logout')
+				        self.guiEditor.updateState('Logout')
+				else:
+				        self.TD.set_Display_STate('fpsInput1')
+				        self.guiEditor.updateState('fpsInput1')
+
+		elif display_state=='fpsInput1':
+				FP_Temp=self.VerificationDatabase(1)
+				# if row locations of FP and ID in respective databases match, then FP is valid
+				if FP_Tempp==0:
+				        self.TD.set_Display_State('NotRead1')
+				        self.guiEditor.updateState('NotRead1')
+				elif FP_Temp==1:
+				        self.TD.set_Display_State('NoMatch1')
+				        self.guiEditor.updateState('NoMatch1')
+				elif FP_Temp==2:
+				        self.TD.set_Display_State('UseMachine1')
+				        self.guiEditor.updateState('UseMachine1')
+
+		elif display_state=='fpsInput2':
+				FP_Temp=self.VerficiationDatabase(1)
+				if FP_Temp==0:
+				        self.TD.set_Display_State('NotRead2')
+				        self.guiEditor.updateState('NotRead2')
+				elif FP_Temp==1:
+				        self.TD.set_Display_State('NoMatch2')
+				        self.guiEdiotr.updateState('NoMatch2')
+				elif FP_Temp==2:
+				        self.TD.set_Display_State('UseMachine2')
+				        self.guiEditor.updateState('UseMachine2')
+                
+		elif display_state=='UseMachine1':
+				if timeout_condition:
+				        self.TD.set_Display_State('Logout')
+				        self.guieditor.updateState('Logout')
+				else:
+				        self.TD.set_Display_State('Logout')
+				        self.guieditor.updateState('Logout')
+
+		elif display_state=='NotRead1':
+				if timeoout_condition:
+				        self.TD.set_Display_State('Logout')
+				        self.guiEditor.updateState('Logout')
+				else:
+				        if flow_input==1:
+				                self.TD.set_Display_State('fpsInput1')
+				                self.guiEditor.updateState('fpsInput1')
+				        elif flow_input==2:
+				                self.TD.set_Display_State('Logout')
+				                self.guiEditor.updateState('Logout')
+
+		elif display_state=='NoMatch1':
+				if timeout_condition:
+				    self.TD.set_Display_State('Logout')
+				    self.guieditor.updateState('Logout')
+				else:
+				    if flow_input==1:
+				            self.TD.set_Display_State('fpsInput1')
+				            self.guieditor.updateState('fpsInput1')
+				    elif flow_input==2:
+				            self.TD.set_Display_State('Logout')
+				            self.guieditor.updateState('Logout')
+
+		elif display_state=='UseMachine2':
+				if timeout_condition:
+				    self.TD.set_Display_State('Logout')
+				    self.guieditor.updateState('Logout')
+				else:
+				    self.TD.set_Display_State('Logout')
+				    self.guieditor.updateState('Logout')
+		elif display_state=='NotRead2':
+				if timeoout_condition:
+				    self.TD.set_Display_State('Logout')
+				    self.guiEditor.updateState('Logout')
+				else:
+				    if flow_input==1:
+				        self.TD.set_Display_State('fpsInput2')
+				        self.guiEditor.updateState('fpsInput2')
+				    elif flow_input==2:
+				        self.TD.set_Display_State('Logout')
+				        self.guiEditor.updateState('Logout')
+		elif display_state=='NoMatch2':
+				if timeout_condition:
+				    self.TD.set_Display_State('Logout')
+				    self.guieditor.updateState('Logout')
+				else:
+				    if flow_input==1:
+				        self.TD.set_Display_State('fpsInput2')
+				        self.guieditor.updateState('fpsInput2')
+				    elif flow_input==2:
+				        self.TD.set_Display_State('Logout')
+				        self.guieditor.updateState('Logout')
+                        
+                        
 
 	def Check_ID_is_7_digits(self,ID): #function makes sure ID number is correct
 		if ID>999999:
 			return ID<10000000
 	def AuthorizationDatabase(self,ID): #function reads database for training level
 		#function not yet implemented, enter a training level to return for testing purposes
-		return 0
+		return 1
+	def VerificationDatabase(self,FP): #function reads database for fingerprint template
+                #function returns 0 if not read, 1 if doesn't match, 2 if matches                                                                                                                                                       
+                #function not yet implemented, enter a fingerprint template to return for testing purposes
+		return 1
 
 
