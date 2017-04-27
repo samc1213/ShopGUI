@@ -19,6 +19,8 @@ class DisplayVideo(tk.Label, AbstractDisplay):
     def playVideo(self, videoPath):
         number = 1
         path = videoPath.replace('{NUMBER}', format(number, '04d'))
+        print os.path.exists(path)
+        print path
         while (os.path.exists(path)):
             photo = Image.open(path)
             pilPhoto = ImageTk.PhotoImage(photo)

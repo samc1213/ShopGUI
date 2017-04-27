@@ -1,10 +1,11 @@
 DisplayState,Template #,StringList(; delimited),Duration,FileAddress,BackgroundColor
 HelloWorld,1,Hello World,20,,#4E2A84
-hiWelcome1,4,Welcome1;Press 1 to continue,10,,#4E2A84
+HiWelcome1,1,Welcome1;Press enter to continue,10,,#ff0000
 Welcome2,4,Welcome2;Press 1 to continue,10,,#4E2A84
-PromptUserID,5,Enter ID,30,,#4E2A84
-Welcome1,2,,10,images/testimage.jpg,#4E2A84
-OkGo,3,,10,images/image-{NUMBER}.jpeg,#4E2A84
+Welcome3,4,Welcome2;Press 1 to continue,1,,#4E2A84
+PromptUserID,5,Enter ID,10,,#ff0000
+HEWelcome1,2,,10,images/testimage.jpg,#4E2A84
+Welcome1,3,,10,images/image-{NUMBER}.jpeg,#4E2A84
 Test,2,,10,images/image-0001.jpeg,#4E2A84
 Choices,4,choose a choice:;choice1;choice2;choice3,10,,#4E2A84
 Input,5,ID =,30,,#ffffff

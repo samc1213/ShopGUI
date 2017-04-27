@@ -165,8 +165,15 @@ class Handler(object):
 				self.TD.set_Display_State("Welcome1") 
 				self.guiEditor.updateState('Welcome1')#stay on welcome screen
 			else:
-				self.TD.set_Display_State("PromptUserID") 
-				self.guiEditor.updateState('PromptUserID')#if user has pressed 1 move on
+				self.TD.set_Display_State("Welcome3") 
+				self.guiEditor.updateState('Welcome3')#if user has pressed 1 move on
+		elif display_state=='Welcome3': #Do this after welcome has finished
+			if timeout_condition: #function called on timeout
+				self.TD.set_Display_State("Welcome1") 
+				self.guiEditor.updateState('Welcome1')#stay on welcome screen
+			else:
+				self.TD.set_Display_State("Welcome3") 
+				self.guiEditor.updateState('Welcome3')#if user has pressed 1 move on
 
 		elif display_state=='PromptUserID': #Do this after welcome has finished
 			if timeout_condition: #function called on timeout
@@ -174,14 +181,14 @@ class Handler(object):
 				self.guiEditor.updateState('Welcome1')#go to  welcome screen
 			else:
 				ID = int(flow_input)
-				if self.Check_ID_is_7_digits(ID):
-					Training_Level=self.AuthorizationDatabase(ID)
-					if Training_Level==0:
-						self.TD.set_Display_State("UserNotFound") 
-						self.guiEditor.updateState('UserNotFound')
-				else: #if ID is not 7 digits
-					self.TD.set_Display_State("ID_Not_Valid") 
-					self.guiEditor.updateState('ID_Not_Valid')
+				# if self.Check_ID_is_7_digits(ID):
+				# 	Training_Level=self.AuthorizationDatabase(ID)
+				# 	if Training_Level==0:
+				# 		self.TD.set_Display_State("OkGo") 
+				# 		self.guiEditor.updateState('OkGo')
+				# else: #if ID is not 7 digits
+				# 	self.TD.set_Display_State("ID_Not_Valid") 
+				# 	self.guiEditor.updateState('ID_Not_Valid')
 
 
 

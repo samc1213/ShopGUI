@@ -13,7 +13,11 @@ from GuiObserver import GuiObserver
 
 
 def test(reader):
-    reader.updateState('Input')
+    reader.updateState('Welcome1')
+    time.sleep(5)
+    reader.updateState('PromptUserID')
+    time.sleep(5)
+    reader.updateState('OkGo')
     # time.sleep(3)
     # reader.updateState('EyeImage')
     # time.sleep(1)

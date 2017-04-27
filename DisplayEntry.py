@@ -32,9 +32,12 @@ class DisplayEntry(AbstractDisplay):
     def hide(self):
         self.input.clearText()
         self.input.grid_forget()
+        self.prompt.grid_forget()
 
     def show(self):
+        self.prompt.grid()
         self.input.grid()
+
 
     def updatePrompt(self, newText):
         self.sv.set(newText)
