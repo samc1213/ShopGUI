@@ -11,7 +11,7 @@ Input,5,ID =,30,,#4E2A84
 UserNotFound,4,User Not Found;1-Retry login;2-Logout,30,,#4E2A84
 NotAuthorized,1,You are not authorized;to use this machine;;Press enter to log out,10,,#4E2A84
 FurtherTraining,1,You are authorized;but may require;additional training;;Press enter to proceed,30,,#4E2A84
-Authorized,1,You are authorized to use this machine;;Press enter to proceed,30,,#4E2A84
+AuthorizedGreen,1,You are authorized to use this machine;;Press enter to proceed,30,,#4E2A84
 VidOption,4, How would you like to proceed?;;1-Watch tutorial video;2-Use machine,30,,#4E2A84
 Video,2,,10,images/testimage.jpg,#4E2A84
 Video_Prep1,1,,1,,#4E2A84
@@ -22,8 +22,8 @@ NotRead1,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
 NotRead2,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
 NoMatch1,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
 NoMatch2,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
-UseMachine1,1,You may now use the machine;;Press enter to logout,1800,,#4E2A84
-UseMachine2,1,You may now use the machine;but may require additional training;;Press enter to logout,1800,,#4E2A84
+UseMachineGreen,1,You may now use the machine;;Press enter to logout,1800,,#4E2A84
+UseMachineYellow,1,You may now use the machine;but may require additional training;;Press enter to logout,1800,,#4E2A84
 Logout,1,Logging Out,3,,#4E2A84
 ID_Not_Valid,4,ID not Valid;1-Retry login;2-Logout,30,,#4E2A84 
 

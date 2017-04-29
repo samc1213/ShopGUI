@@ -88,8 +88,14 @@ class Handler(object):
 		print 'entering identify thread'
 		if self.fps.FPS_Identify(ID):
 			print "userfound"
-			self.TD.set_Display_State('UseMachine1')
-			self.guiEditor.updateState('UseMachine1')
+			if self.TD._Training_Level == 3:
+				self.Alert('green')
+				self.TD.set_Display_State('UseMachineGreen')
+				self.guiEditor.updateState('UseMachineGreen')
+			else:
+				self.Alert('yellow')
+				self.TD.set_Display_State('UseMachineYellow')
+				self.guiEditor.updateState('UseMachineYellow')
 		else:
 			print "usernotfound"
 			self.TD.set_Display_State('NoMatch1')
@@ -174,10 +180,10 @@ class Handler(object):
 							self.TD._ID=ID
 							self.TD.set_Display_State('FurtherTraining')
 							self.guiEditor.updateState('FurtherTraining')
-						elif Training_Leve==3:
+						elif Training_Level==3:
 							self.TD._ID=ID
-							self.TD.set_Display_State('Authorized')
-							self.guiEditor.updateState('Authorized')                             
+							self.TD.set_Display_State('AuthorizedGreen')
+							self.guiEditor.updateState('AuthorizedGreen')                             
 					else: #if ID is not 7 digits
 						self.TD.set_Display_State("ID_Not_Valid") 
 						self.guiEditor.updateState('ID_Not_Valid')
@@ -245,9 +251,9 @@ class Handler(object):
 				self.TD.set_Display_State('fpsInput1')
 				self.guiEditor.updateState('fpsInput1')
 
-		elif display_state=='Authorized':
+		elif display_state=='AuthorizedGreen':
 				self.IdentifyUser()
-				self.TD.set_Display_STate('fpsInput1')
+				self.TD.set_Display_State('fpsInput1')
 				self.guiEditor.updateState('fpsInput1')
 
 		elif display_state=='fpsInput1':
@@ -255,7 +261,15 @@ class Handler(object):
 				self.guiEditor.updateState('Logout')
 
                 
-		elif display_state=='UseMachine1':
+		elif display_state=='UseMachineGreen':
+				if timeout_condition:
+				        self.TD.set_Display_State('Logout')
+				        self.guiEditor.updateState('Logout')
+				else:
+				        self.TD.set_Display_State('Logout')
+				        self.guiEditor.updateState('Logout')
+
+		elif display_state=='UseMachineYellow':
 				if timeout_condition:
 				        self.TD.set_Display_State('Logout')
 				        self.guiEditor.updateState('Logout')
@@ -325,7 +339,8 @@ class Handler(object):
 			return ID<10000000
 	def AuthorizationDatabase(self,ID): #function reads database for training level
 		#function not yet implemented, enter a training level to return for testing purposes
-		return 2
+		self.TD._Training_Level = 3
+		return self.TD._Training_Level
 	def IdentifyUser(self): #function reads database for fingerprint template
                 #function returns 0 if not read, 1 if doesn't match, 2 if matches                                                                                                                                                       
                 #function not yet implemented, enter a fingerprint template to return for testing purposes
