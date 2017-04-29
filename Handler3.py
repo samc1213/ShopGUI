@@ -8,6 +8,8 @@ import serial
 from GPIO_Class import GPIO_Class
 from Thread_Data_Object import Thread_Data
 from FPS_Class import FPS_Class
+from Database import template_database
+authorization_reader=template_database()
 GPIO = GPIO_Class()
 threads = []
 
@@ -339,7 +341,12 @@ class Handler(object):
 			return ID<10000000
 	def AuthorizationDatabase(self,ID): #function reads database for training level
 		#function not yet implemented, enter a training level to return for testing purposes
-		self.TD._Training_Level = 3
+		TL= authorization_reader.CheckAuthorizationDatabase(ID,"Mill",'/home/pi/Desktop/NUShop/ShopGUI/AuthorizationDatabase')
+		TL=int(TL)
+		if TL == 999:
+			print "error did not read TL"
+		else:
+			self.TD._Training_Level = TL
 		return self.TD._Training_Level
 	def IdentifyUser(self): #function reads database for fingerprint template
                 #function returns 0 if not read, 1 if doesn't match, 2 if matches                                                                                                                                                       

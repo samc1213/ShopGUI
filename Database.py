@@ -57,6 +57,42 @@ class template_database(object):
     def File_Read(self,file_):
         return self.load_database(file_)
 
+    def CheckAuthorizationDatabase(self,ID_N,MachineType,filename):
+        ID_string=str(ID_N)
+        print "inside of checking authorization"
+        traininglevel=999
+        lines=self.load_database(filename)
+        for i in range(0,len(lines)):
+            c_line=lines[i]
+            if c_line[:7]==ID_string:
+                splitline=c_line.split(",")
+                print splitline
+                for index in range(0,len(splitline)):
+                    if splitline[index] == MachineType:
+                        traininglevel=splitline[index+1]
+        return traininglevel
+
+    def SetAuthorizationLevel(self,ID_N,filename,newTLMill, newTLLathe):
+        newline=str(ID_N)+ ', Mill ,' + str(newTLMill) + ', 01/01/2017 , Lathe , ' + str(newTLLathe) + ', 01/01/2017 '
+        if self.CheckAuthorizationDatabase(ID_N,'Mill',filename) == 999:
+            print 'user doesnt exist'
+            lines=self.load_database(filename)
+            
+            lines.append(newline)
+            self.File_Write(filename,lines)
+        else:
+            ID_string=str(ID_N)
+            lines=self.load_database(filename)
+            for i in range(0,len(lines)):
+                c_line=lines[i]
+                if c_line[:7]==ID_string:
+                    lines[i]=newline
+            self.File_Write(filename,lines)
+
+
+
+
+
         
         
 
