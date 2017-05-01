@@ -25,5 +25,4 @@ NoMatch2,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
 UseMachineGreen,1,You may now use the machine;;Press enter to logout,1800,,#4E2A84
 UseMachineYellow,1,You may now use the machine;but may require additional training;;Press enter to logout,1800,,#4E2A84
 Logout,1,Logging Out,3,,#4E2A84
-ID_Not_Valid,4,ID not Valid;1-Retry login;2-Logout,30,,#4E2A84 
-
+ID_Not_Valid,4,ID not Valid;1-Retry login;2-Logout,30,,#4E2A84

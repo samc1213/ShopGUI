@@ -19,19 +19,27 @@ class DisplayVideo(tk.Label, AbstractDisplay):
     def playVideo(self, videoPath):
         number = 1
         path = videoPath.replace('{NUMBER}', format(number, '04d'))
-        print os.path.exists(path)
-        print path
+        photos = []
         while (os.path.exists(path)):
             photo = Image.open(path)
             pilPhoto = ImageTk.PhotoImage(photo)
-            self.configure(image=pilPhoto)
-            self.image = pilPhoto
-            time.sleep(VIDEO_SLEEP_TIME)
+            photos.append(pilPhoto)
             number += 1
             path = videoPath.replace('{NUMBER}', format(number, '04d'))
+
+        for photo in photos:
+            self.configure(image=photo)
+            self.image = pilPhoto
+            time.sleep(VIDEO_SLEEP_TIME)
 
     def hide(self):
         self.grid_forget()
 
     def show(self):
         self.grid()
+
+    def updateBackground(self, newColor):
+        pass
+
+    def updateTextSize(self, newSize):
+        pass

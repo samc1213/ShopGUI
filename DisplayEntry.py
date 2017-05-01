@@ -37,7 +37,16 @@ class DisplayEntry(AbstractDisplay):
     def show(self):
         self.prompt.grid()
         self.input.grid()
+        self.input.focus_set()
 
 
     def updatePrompt(self, newText):
         self.sv.set(newText)
+
+    def updateBackground(self, newColor):
+        self.prompt.updateBackground(newColor)
+        self.input.updateBackground(newColor)
+
+    def updateTextSize(self, newSize):
+        self.input.updateTextSize(newSize)
+        self.prompt.updateTextSize(newSize)

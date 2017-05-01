@@ -27,3 +27,9 @@ class DisplayImage(tk.Label, AbstractDisplay):
 
     def show(self):
         self.grid()
+
+    def updateBackground(self, newColor):
+        pass
+
+    def updateTextSize(self, newSize):
+        pass

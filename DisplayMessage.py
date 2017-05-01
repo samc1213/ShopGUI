@@ -17,11 +17,17 @@ class DisplayMessage(AbstractDisplay):
     def onReturn(self, event):
         self.onInput('')
 
-    def updateText(self, newText):
-        self.sv.set(newText)
+    def updateText(self, listOfChoices):
+        self.sv.set('\n'.join(listOfChoices))
 
     def hide(self):
         self.bigLabel.grid_forget()
 
     def show(self):
         self.bigLabel.grid()
+
+    def updateBackground(self, newColor):
+        self.bigLabel.updateBackground(newColor)
+
+    def updateTextSize(self, newSize):
+        self.bigLabel.updateTextSize(newSize)

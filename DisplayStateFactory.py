@@ -34,9 +34,11 @@ class DisplayStateFactory(object):
             self.clearDisplay()
             self.root.configure(background=databaseEntry['color'])
         if databaseEntry['templateNo'] == 1:
-            self.displayMessage.updateText(databaseEntry['stringList'][0])
+            self.displayMessage.updateText(databaseEntry['stringList'])
             self.currentDisplayState = fileInput
             self.displayMessage.show()
+            self.displayMessage.updateBackground(databaseEntry['color'])
+            self.displayMessage.updateTextSize(databaseEntry['textSize'])
         elif databaseEntry['templateNo'] == 2:
             photo = Image.open(databaseEntry['fileAddress'])
             pilPhoto = ImageTk.PhotoImage(photo)
@@ -50,10 +52,14 @@ class DisplayStateFactory(object):
         elif databaseEntry['templateNo'] == 4:
             self.displayChoices.updateText(databaseEntry['stringList'])
             self.currentDisplayState = fileInput
+            self.displayChoices.updateBackground(databaseEntry['color'])
+            self.displayChoices.updateTextSize(databaseEntry['textSize'])
             self.displayChoices.show()
         elif databaseEntry['templateNo'] == 5:
             self.currentDisplayState = fileInput
-            self.displayEntry.show()
             self.displayEntry.updatePrompt(databaseEntry['stringList'][0])
+            self.displayEntry.updateBackground(databaseEntry['color'])
+            self.displayEntry.updateTextSize(databaseEntry['textSize'])
+            self.displayEntry.show()
         else:
             raise 'Invalid templateNo: {0}'.format(databaseEntry['templateNo'])

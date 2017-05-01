@@ -17,11 +17,6 @@ def test(reader):
     time.sleep(5)
     reader.updateState('PromptUserID')
     time.sleep(5)
-    reader.updateState('OkGo')
-    # time.sleep(3)
-    # reader.updateState('EyeImage')
-    # time.sleep(1)
-    # reader.updateState('Input')
 
 def mainGuiLoop(root):
     root.mainloop()

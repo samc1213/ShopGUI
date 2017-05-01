@@ -8,3 +8,9 @@ class TextLabel(tk.Label):
                             background=BACKGROUND_COLOR, foreground=TEXT_COLOR)
         self.grid(row=row, column=column)
         self.screen_height = screen_height
+
+    def updateBackground(self, newColor):
+        self.configure(background=newColor)
+
+    def updateTextSize(self, newSize):
+        self.configure(font=('Helvetica', int(newSize * self.screen_height)))

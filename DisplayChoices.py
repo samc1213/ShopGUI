@@ -30,3 +30,9 @@ class DisplayChoices(AbstractDisplay):
 
     def show(self):
         self.bigLabel.grid()
+
+    def updateBackground(self, newColor):
+        self.bigLabel.updateBackground(newColor)
+
+    def updateTextSize(self, newSize):
+        self.bigLabel.updateTextSize(newSize)

@@ -1,10 +1,11 @@
-from Constants import FILE_POLL_INTERVAL, DATABASE_FILE_DELIMITER, STRING_LIST_DELIMITER
+from Constants import FILE_POLL_INTERVAL, DATABASE_FILE_DELIMITER, STRING_LIST_DELIMITER, BIG_FONT_HEIGHT_FRACTION
 from threading import Timer
 from DisplayStateFactory import DisplayStateFactory
 import time
 
 
 class FileReader(object):
+
     def __init__(self, rootGUIWidget, databaseFilePath, inputFilePath, outputFilePath, guiObserver):
         self.rootGUIWidget = rootGUIWidget
         self.inputFilePath = inputFilePath
@@ -26,20 +27,26 @@ class FileReader(object):
         self.database = {}
         for row in newText.split('\n')[1:]:
             rowSplit = row.split(DATABASE_FILE_DELIMITER)
-            if (len(rowSplit) != 6):
+            if (len(rowSplit) != 7):
                 print 'Skipping row. Length incorrect. {0}'.format(row)
                 continue
             try:
                 displayState = rowSplit[0].strip()
                 templateNo = int(rowSplit[1].strip())
                 stringList = rowSplit[2].split(STRING_LIST_DELIMITER)
-                duration = int(rowSplit[3].strip())
+                duration = float(rowSplit[3].strip())
                 fileAddress = rowSplit[4].strip()
                 color = rowSplit[5].strip()
+                try:
+                    textSize = float(rowSplit[6].strip())
+                except:
+                    textSize = BIG_FONT_HEIGHT_FRACTION
             except Exception as ex:
                 print 'There was a problem parsing the database row: {0}. {1}'.format(row, str(ex))
                 continue
-            self.database[displayState] = {'templateNo': templateNo, 'stringList': stringList, 'duration': duration, 'fileAddress': fileAddress, 'color': color}
+            self.database[displayState] = {'templateNo': templateNo, 'stringList': stringList,
+                                           'duration': duration, 'fileAddress': fileAddress, 'color': color,
+                                           'textSize': textSize}
 
     def updateState(self, fileInput):
         displayStateIsNew = fileInput != self.factory.currentDisplayState
@@ -50,7 +57,8 @@ class FileReader(object):
             self.factory.updateDisplayState(dbEntry, fileInput)
             self.timeoutTimer.cancel()
             self.timeoutTimer = None
-            self.timeoutTimer = Timer(dbEntry['duration'], lambda: self.onTimeout())
+            self.timeoutTimer = Timer(
+                dbEntry['duration'], lambda: self.onTimeout())
             self.timeoutTimer.start()
         elif displayStateIsNew:
             print 'The input {0} does not exist in the database. Keeping old displayState. Database: {1}'.format(fileInput, self.database)
