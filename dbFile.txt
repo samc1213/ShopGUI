@@ -1,28 +1,28 @@
-DisplayState,Template #,StringList(; delimited),Duration,FileAddress,BackgroundColor
-HelloWorld,1,Hello World,20,,#4E2A84
-Welcome1,4,Welcome1;Press 1 to continue,10,,#4E2A84
-Welcome2,4,Welcome2;Press 1 to continue,10,,#4E2A84
-PromptUserID,5,Enter ID,30,,#4E2A84
-eyeImage,2,,10,images/testimage.jpg,#4E2A84
-OkGo,3,,10,images/image-{NUMBER}.jpeg,#4E2A84
-Test,2,,10,images/image-0001.jpeg,#4E2A84
-Choices,4,choose a choice:;choice1;choice2;choice3,10,,#4E2A84
-Input,5,ID =,30,,#4E2A84
-UserNotFound,4,User Not Found;1-Retry login;2-Logout,30,,#4E2A84
-NotAuthorized,1,You are not authorized;to use this machine;;Press enter to log out,10,,#4E2A84
-FurtherTraining,1,You are authorized;but may require;additional training;;Press enter to proceed,30,,#4E2A84
-AuthorizedGreen,1,You are authorized to use this machine;;Press enter to proceed,30,,#4E2A84
-VidOption,4, How would you like to proceed?;;1-Watch tutorial video;2-Use machine,30,,#4E2A84
-Video,2,,10,images/testimage.jpg,#4E2A84
-Video_Prep1,1,,1,,#4E2A84
-Video1,3,,5,images/image-{NUMBER}.jpeg,#4E2A84
-fpsInput1,1,Please scan fingerprint,40,,#4E2A84
-fpsInput2,1,Please scan fingerprint,40,,#4E2A84
-NotRead1,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
-NotRead2,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
-NoMatch1,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
-NoMatch2,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84
-UseMachineGreen,1,You may now use the machine;;Press enter to logout,1800,,#4E2A84
-UseMachineYellow,1,You may now use the machine;but may require additional training;;Press enter to logout,1800,,#4E2A84
-Logout,1,Logging Out,3,,#4E2A84
-ID_Not_Valid,4,ID not Valid;1-Retry login;2-Logout,30,,#4E2A84
+DisplayState,Template #,StringList(; delimited),Duration,FileAddress,BackgroundColor,textsize
+HelloWorld,1,Hello World,20,,#4E2A84,.1
+Welcome1,1,Welcome1;Running Mock Version;FPS disabled;Video disabled; Press enter to continue,7,,#4E2A84,.07
+Welcome2,1,Welcome2;Running Mock Version; valid ID yellow = 1234567;valid ID green = 7654321; Press enter to continue,7,,#4E2A84,.07
+PromptUserID,5,Enter ID,30,,#4E2A84,.1
+eyeImage,2,,10,images/testimage.jpg,#4E2A84,.1
+OkGo,3,,10,images/image-{NUMBER}.jpeg,#4E2A84,.1
+Test,2,,10,images/image-0001.jpeg,#4E2A84,.1
+Choices,4,choose a choice:;choice1;choice2;choice3,10,,#4E2A84,.1
+Input,5,ID =,30,,#4E2A84,.1
+UserNotFound,4,User Not Found;1-Retry login;2-Logout,30,,#4E2A84,.1
+NotAuthorized,1,You are not authorized;to use this machine;;Press enter to log out,10,,#4E2A84,.1
+FurtherTraining,1,You are authorized;but may require;additional training;;Press enter to proceed,30,,#4E2A84,.08
+AuthorizedGreen,1,You are authorized; to use this machine;;Press enter to proceed,30,,#4E2A84,.08
+VidOption,4, How would you like to proceed?;;1-Watch tutorial video;2-Use machine,30,,#4E2A84,.07
+Video,2,,10,images/testimage.jpg,#4E2A84,.1
+Video_Prep1,1,,1,,#4E2A84,.1
+Video1,2,,10,/home/pi/Desktop/ShopGUI/images/image-0001.jpeg,#4E2A84,.1
+fpsInput1,1,Please scan fingerprint; ;FPS is disabled; wait 7 seconds,40,,#4E2A84,.07
+fpsInput2,1,Please scan fingerprint,40,,#4E2A84,.1
+NotRead1,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1
+NotRead2,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1
+NoMatch1,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1
+NoMatch2,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1
+UseMachineGreen,1,You may now use the machine;;Press enter to logout,1800,,#228B22,.06
+UseMachineYellow,1,You may now use the machine;but may require additional training;;Press enter to logout,1800,,#CCCC00,.06
+Logout,1,Logging Out,3,,#4E2A84,.1
+ID_Not_Valid,4,ID not Valid;1-Retry login;2-Logout,30,,#4E2A84,.1
