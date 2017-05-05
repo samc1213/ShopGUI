@@ -12,10 +12,6 @@ class DisplayMessage(AbstractDisplay):
         self.sv.set('')
         self.bigLabel = TextLabel(master, self.sv, 0, 0, screen_height, BIG_FONT_HEIGHT_FRACTION)
         self.onInput = onInput
-        master.bind("<Return>", self.onReturn)
-
-    def onReturn(self, event):
-        self.onInput('')
 
     def updateText(self, listOfChoices):
         self.sv.set('\n'.join(listOfChoices))

@@ -19,7 +19,16 @@ class DisplayStateFactory(object):
         self.displayVideo = DisplayVideo(root, root.winfo_screenheight(), pilPhoto)
         self.displayChoices = DisplayChoices(root, root.winfo_screenheight(), self.onInput)
         self.displayEntry = DisplayEntry(root, root.winfo_screenheight(), onInput)
+        root.bind("<Key>", self.onKeyPressed)
         self.clearDisplay()
+
+    def onKeyPressed(self, event):
+        if event.keysym == "Return" or event.keysym == "KP_Enter":
+            # print "Enter was Pressed: giving display entry control"
+            self.displayEntry.onReturn(event)
+        else: 
+            # print "Enter was not pressed giving display choices control"
+            self.displayChoices.onKeyPressed(event)
 
     def clearDisplay(self):
         self.currentDisplayState = None

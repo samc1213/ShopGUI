@@ -11,7 +11,6 @@ class DisplayChoices(AbstractDisplay):
         self.sv = StringVar()
         self.bigLabel = TextLabel(master, self.sv, 0, 0, screen_height, BIG_FONT_HEIGHT_FRACTION)
         self.onInput = onInput
-        master.bind("<Key>", self.onKeyPressed)
 
     def onKeyPressed(self, event):
         if self.choices is not None and event.char in [str(i) for i in range(1, len(self.choices))]:

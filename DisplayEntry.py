@@ -23,7 +23,6 @@ class DisplayEntry(AbstractDisplay):
         self.sv.set('')
         self.prompt = TextLabel(master, self.sv, 1, 0, screen_height, BIG_FONT_HEIGHT_FRACTION)
         self.onInput = onInput
-        master.bind("<Return>", self.onReturn)
 
     def onReturn(self, event):
         text = self.input.getText()

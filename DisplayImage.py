@@ -13,10 +13,7 @@ class DisplayImage(tk.Label, AbstractDisplay):
         master.grid_rowconfigure(0, weight=1)
         self.grid(row=0, column=0)
         self.onInput = onInput
-        master.bind("<Return>", self.onReturn)
 
-    def onReturn(self, event):
-        self.onInput('')
 
     def updateImage(self, pilPhoto):
         self.configure(image=pilPhoto)
