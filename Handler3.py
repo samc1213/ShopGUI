@@ -50,7 +50,14 @@ class Handler(object):
 
 
 	def DoWorkerThread(self):
-
+		GPIO.LED_ON("yellow")
+		time.sleep(.5)
+		GPIO.LED_ON("blue")
+		time.sleep(.5)
+		GPIO.LED_ON("red")
+		time.sleep(.5)
+		GPIO.LED_ON("green")
+		time.sleep(.5)
 
 		C = threading.Thread(name='Csense', target=self.Csense)
 		
@@ -67,19 +74,6 @@ class Handler(object):
 		T.start()
 
 		self.FlowLogic('Welcome1',1,9999)
-		while self.TD.get_Sec_Count() < 100:
-			if self.TD.get_Sec_Count() >= 70:
-				self.TD.set_Sys_State('shutdown')
-			# elif self.TD.get_Sec_Count() >= 40:
-			#     self.TD.set_Display_State('HelloWorld')
-			# elif self.TD.get_Sec_Count() >= 20:
-			#     self.TD.set_Display_State('EyeImage')
-			# elif self.TD.get_Sec_Count() >= 0:
-			#     self.TD.set_Display_State('HelloWorld')
-			#elif self.TD.get_Sec_Count() >= 10 and self.TD.get_Alert_State() != 'green':
-				#self.TD.set_Sys_State('identify')
-				#self.TD.set_Display_State('Input')
-			time.sleep(1)
 
 	def StartWorkerThreads(self):
 		self.running = True
@@ -106,6 +100,7 @@ class Handler(object):
 			self.guiEditor.updateState('NoMatch1')
 
 
+
 	def Alert(self,LED_COLOR):
 		logging.debug('updating LED')
 		self.TD.set_Alert_State(LED_COLOR)
@@ -124,8 +119,7 @@ class Handler(object):
 	def Csense(self):
 		Alert=self.TD.get_Alert_State()
 		Sys=self.TD.get_Sys_State()
-		counter=0
-		self.Alert("blue_")
+		self.Alert("blue")
 
 		while Sys!='shutdown' and self.running:
 			logging.debug('Checking Button')
@@ -134,11 +128,11 @@ class Handler(object):
 
 
 
-			if GPIO.ReadButton() and Alert=="blue_":
-				self.Alert("red__")
-			elif Alert=="red__":
+			if GPIO.ReadButton() and Alert=="blue":
+				self.Alert("red")
+			elif Alert=="red":
 				time.sleep(10)
-				self.Alert("blue_")
+				self.Alert("blue")
 
 			time.sleep(.1)
 		GPIO.Cleanup()
@@ -367,5 +361,6 @@ class Handler(object):
 		F = threading.Thread(name='FPS', target=self.Fingerprint)
 		threads.append(F)
 		F.start()
+
 
 

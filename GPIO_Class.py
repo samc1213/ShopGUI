@@ -6,12 +6,13 @@ import sys
 #GPIO.setwarnings(False) uncomment if using multiple GPIO programs on one PI
 
 #setup
-blue=32
-red=22
-green=36
+blue=37
+red=15
+green=13
+yellow=22
 off=0
 on=1
-channel_list=[blue,red,green]
+channel_list=[blue,red,green,yellow]
 button=18
 
 class GPIO_Class(object):
@@ -37,16 +38,14 @@ class GPIO_Class(object):
         
     def Color2ChannelList(self,color):
         null=0
-        if color=='blue_':
+        if color=='blue':
             return ([blue,null])
-        if color=='red__':
+        if color=='red':
             return [red,0]
         if color=='green':
             return [green,null]
         if color=='yellow':
-            return ([red,green])
-        if color=='white':
-            return([blue,green,red])
+            return ([yellow,0])
         else:
             print("color not defined")
             exit(0)
