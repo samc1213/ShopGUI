@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import Tkinter as tk
 from Constants import BIG_FONT_HEIGHT_FRACTION, BACKGROUND_COLOR
 from TextLabel import TextLabel
@@ -11,7 +13,6 @@ import threading
 import sys
 import os
 from GuiObserver import GuiObserver
-
 
 def test(reader):
     reader.updateState('Welcome1')
