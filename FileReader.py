@@ -12,7 +12,7 @@ class FileReader(object):
         self.inputFilePath = inputFilePath
         self.outputFilePath = outputFilePath
         self.readDatabaseFile(databaseFilePath)
-        self.factory = DisplayStateFactory(self.rootGUIWidget, self.onInput)
+        self.factory = DisplayStateFactory(self.rootGUIWidget, self.onInput,self.directory)
         self.observer = guiObserver
         self.timeoutTimer = None
         self.timeoutTimer = Timer(10, lambda: self.initialTimer())

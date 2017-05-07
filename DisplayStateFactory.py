@@ -10,12 +10,12 @@ GPIO2=GPIO_Class()
 
 
 class DisplayStateFactory(object):
-    def __init__(self, root, onInput):
+    def __init__(self, root, onInput,Working_directory):
         self.root = root
         self.currentDisplayState = None
         self.onInput = onInput
         self.displayMessage = DisplayMessage(root, root.winfo_screenheight(), self.onInput)
-        photo = Image.open(DEFAULT_DISPLAYIMAGE_FILEPATH)
+        photo = Image.open(Working_directory+'/'+DEFAULT_DISPLAYIMAGE_FILEPATH)
         pilPhoto = ImageTk.PhotoImage(photo)
         self.displayImage = DisplayImage(root, root.winfo_screenheight(), pilPhoto, self.onInput)
         self.displayVideo = DisplayVideo(root, root.winfo_screenheight(), pilPhoto)
