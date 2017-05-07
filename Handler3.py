@@ -13,13 +13,15 @@ authorization_reader=template_database()
 GPIO = GPIO_Class()
 threads = []
 
-class Handler(object):
-	def __init__(self, guiEditor, observer):
-		
-		self.TD = Thread_Data(guiEditor)
-		self.fps = FPS_Class()
-		self.guiEditor = guiEditor
 
+
+
+class Handler(object):
+	def __init__(self, guiEditor, observer,Working_directory):
+		self.directory = Working_directory;
+		self.TD = Thread_Data(guiEditor)
+		self.fps = FPS_Class(self.directory)
+		self.guiEditor = guiEditor
 		self.port = serial.Serial(
 				"/dev/ttyAMA0",
 				baudrate=9600,
@@ -341,13 +343,24 @@ class Handler(object):
 			return ID<10000000
 	def AuthorizationDatabase(self,ID): #function reads database for training level
 		#function not yet implemented, enter a training level to return for testing purposes
-		TL= authorization_reader.CheckAuthorizationDatabase(ID,"Mill",'/home/pi/Desktop/NUShop/ShopGUI/AuthorizationDatabase')
-		TL=int(TL)
-		if TL == 999:
-			print "error did not read TL"
+		# TL= authorization_reader.CheckAuthorizationDatabase(ID,"Mill",self.directory+'/AuthorizationDatabase')
+		# TL=int(TL)
+		# if TL == 999:
+		# 	print "error did not read TL"
+		# else:
+		# 	self.TD._Training_Level = TL
+		# return self.TD._Training_Level
+
+		if ID==1234567:
+			self.TD._Training_Level = 2
+		elif ID==7654321:
+			self.TD._Training_Level = 3
+		elif ID==2765750:
+			self.TD._Training_Level = 3
 		else:
-			self.TD._Training_Level = TL
+			self.TD._Training_Level = 0
 		return self.TD._Training_Level
+		
 	def IdentifyUser(self): #function reads database for fingerprint template
                 #function returns 0 if not read, 1 if doesn't match, 2 if matches                                                                                                                                                       
                 #function not yet implemented, enter a fingerprint template to return for testing purposes

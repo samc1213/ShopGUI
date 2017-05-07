@@ -6,7 +6,8 @@ import time
 
 class FileReader(object):
 
-    def __init__(self, rootGUIWidget, databaseFilePath, inputFilePath, outputFilePath, guiObserver):
+    def __init__(self, rootGUIWidget, databaseFilePath, inputFilePath, outputFilePath, guiObserver, Working_directory):
+        self.directory = Working_directory
         self.rootGUIWidget = rootGUIWidget
         self.inputFilePath = inputFilePath
         self.outputFilePath = outputFilePath
@@ -36,6 +37,7 @@ class FileReader(object):
                 stringList = rowSplit[2].split(STRING_LIST_DELIMITER)
                 duration = float(rowSplit[3].strip())
                 fileAddress = rowSplit[4].strip()
+                fileAddress = self.directory + '/' + fileAddress
                 color = rowSplit[5].strip()
                 try:
                     textSize = float(rowSplit[6].strip())

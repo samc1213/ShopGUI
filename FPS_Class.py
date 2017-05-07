@@ -38,13 +38,13 @@ port = serial.Serial(
 
 from Database import template_database as DB
 database=DB()
-directory='/home/pi/Desktop/FPS_GPIO3'
-filename=directory+'/template_database'
+
 
 
 class FPS_Class(object):
-        def __init__(self):
-                pass
+        def __init__(self,directory):
+				self.filename=directory+'/template_database'
+				pass
 
 
 
@@ -112,7 +112,7 @@ class FPS_Class(object):
 
                         strdata +=item
 
-                database.write_template(filename,ID_N,strdata,overwrite) #write to text file with accompanying ID
+                database.write_template(self.filename,ID_N,strdata,overwrite) #write to text file with accompanying ID
 
 
 
@@ -141,9 +141,10 @@ class FPS_Class(object):
                 if recvPkg[4] == NACK:
                         print("error: %s" % recvPkg[3])
                         return -2
-                template=database.check_database(filename,ID_N)
+                template=database.check_database(self.filename,ID_N)
                 if template==0:
                         print('ID not found in database')
+                        return 0
                 else:
 
                         data_list=map(ord,template.decode("hex")) #decodes the hex template into list of numbers
@@ -162,8 +163,8 @@ class FPS_Class(object):
                                 print("error: %s" % recvPkg[3])
                                 return -2
 
-                time.sleep(1)
-                return recvPkg[3]
+                time.sleep(.1)
+                return 1
 
 
         def startScanner(self):
@@ -249,8 +250,9 @@ class FPS_Class(object):
             self.removeAll()
             print("Uploading template to scanner: ID = %d" % ID_N)
             ident=0
-            self.set_template(CMD_SET_TEMPLATE,ID_N,ident)
+            status = self.set_template(CMD_SET_TEMPLATE,ID_N,ident)
             self.stopScanner()
+            return status
 
 
         def FPS_RemoveAll(self):
@@ -261,7 +263,9 @@ class FPS_Class(object):
             self.stopScanner()
 
         def FPS_Identify(self,ID_N):
-            self.FPS_Upload_Template(ID_N)
+            status = self.FPS_Upload_Template(ID_N)
+            if status == 0:
+                return 0 #user was not found in database
             self.startScanner()
             self.led()
 
@@ -269,14 +273,14 @@ class FPS_Class(object):
             self.waitForFinger(False)
             if self.captureFinger() < 0:	# <10>
                 self.identFail()
-                return
+                result = 2 #finger not detected
             ident = self.identifyUser()
             if(ident == 0):	# <11>
                 print("Identity found: %d" % ID_N)
-                result=1
+                result = 1 #identification was a success 
             else:
-                print("User not found")
-                result=0
+                print("User did not match")
+                result = 3 #did not match
             self.led(False)
             self.stopScanner()
             return result

@@ -15,8 +15,8 @@ AuthorizedGreen,1,You are authorized; to use this machine;;Press enter to procee
 VidOption,4, How would you like to proceed?;;1-Watch tutorial video;2-Use machine,30,,#4E2A84,.07
 Video,2,,10,images/testimage.jpg,#4E2A84,.1
 Video_Prep1,1,,1,,#4E2A84,.1
-Video1,2,,10,/home/pi/Desktop/ShopGUI/images/image-0001.jpeg,#4E2A84,.1
-fpsInput1,1,Please scan fingerprint; ;FPS is disabled; wait 7 seconds,40,,#4E2A84,.07
+Video1,2,,10,images/image-0001.jpeg,#4E2A84,.1
+fpsInput1,1,Please scan fingerprint,40,,#4E2A84,.07
 fpsInput2,1,Please scan fingerprint,40,,#4E2A84,.1
 NotRead1,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1
 NotRead2,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1

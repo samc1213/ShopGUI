@@ -9,6 +9,7 @@ except ImportError:
     pass
 import threading
 import sys
+import os
 from GuiObserver import GuiObserver
 
 
@@ -21,7 +22,7 @@ def test(reader):
 def mainGuiLoop(root):
     root.mainloop()
 
-def setUp():
+def setUp(Working_directory):
     root = tk.Tk()
     root.overrideredirect(True)
     root.overrideredirect(False)
@@ -29,14 +30,19 @@ def setUp():
     root.configure(background=BACKGROUND_COLOR)
 
     observer = GuiObserver()
-    reader = FileReader(root, 'dbFile.txt', 'inputFile.txt', 'outputFile.txt', observer)
+    reader = FileReader(root, Working_directory +'/dbFile.txt', Working_directory + '/inputFile.txt', Working_directory + '/outputFile.txt', observer, Working_directory)
 
     return reader, root, observer
 
 
 if __name__ == '__main__':
     try:
-        reader, root, observer = setUp()
+
+        print('sys.argv[0] =', sys.argv[0])             
+        pathname = os.path.dirname(sys.argv[0])
+        print('full path =', os.path.abspath(pathname)) 
+        Working_directory = os.path.abspath(pathname)
+        reader, root, observer = setUp(Working_directory)
 
         if len(sys.argv) == 2:
             arg = sys.argv[1]
@@ -51,7 +57,7 @@ if __name__ == '__main__':
                 handler = Handler(reader, observer)
                 handler.StartWorkerThreads()
         else:
-            handler = Handler(reader, observer)
+            handler = Handler(reader, observer,Working_directory)
             handler.StartWorkerThreads()
             mainGuiLoop(root)
     except Exception as e:
