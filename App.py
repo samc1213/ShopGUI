@@ -26,7 +26,7 @@ def setUp(Working_directory):
     root = tk.Tk()
     root.overrideredirect(True)
     root.overrideredirect(False)
-    #root.attributes('-fullscreen', True)
+    root.attributes('-fullscreen', True)
     root.configure(background=BACKGROUND_COLOR)
 
     observer = GuiObserver()

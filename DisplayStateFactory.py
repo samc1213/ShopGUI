@@ -5,6 +5,8 @@ from DisplayVideo import DisplayVideo
 from DisplayChoices import DisplayChoices
 from DisplayEntry import DisplayEntry
 from PIL import Image, ImageTk
+from GPIO_Class import GPIO_Class
+GPIO2=GPIO_Class()
 
 
 class DisplayStateFactory(object):
@@ -26,6 +28,8 @@ class DisplayStateFactory(object):
         if event.keysym == "Return" or event.keysym == "KP_Enter":
             # print "Enter was Pressed: giving display entry control"
             self.displayEntry.onReturn(event)
+        elif event.keycode == 112:
+            GPIO2.LED_ON('red')
         else: 
             # print "Enter was not pressed giving display choices control"
             self.displayChoices.onKeyPressed(event)
