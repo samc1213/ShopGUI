@@ -129,11 +129,11 @@ class Handler(object):
 
 
 
-			if GPIO.ReadButton() and Alert=="blue":
-				self.Alert("red")
-			elif Alert=="red":
-				time.sleep(10)
-				self.Alert("blue")
+			if GPIO.ReadButton() and Alert=="blue_":
+				self.Alert("red__")
+				self.TD.set_Display_State('TurnOff')
+				self.guiEditor.updateState('TurnOff')
+
 
 			time.sleep(.1)
 		GPIO.Cleanup()
@@ -217,6 +217,7 @@ class Handler(object):
 				self.guiEditor.updateState('Logout')
 
 		elif display_state =='Logout': #Do this after NotAuthorized has finished
+                                self.Alert('blue_')
 				self.TD.set_Display_State('Welcome1')
 				self.guiEditor.updateState('Welcome1')
 
@@ -247,9 +248,8 @@ class Handler(object):
 				self.guiEditor.updateState('Video1')
 
 		elif display_state=='Video1':
-				self.IdentifyUser()
-				self.TD.set_Display_State('fpsInput1')
-				self.guiEditor.updateState('fpsInput1')
+				self.TD.set_Display_State('VidOption')
+				self.guiEditor.updateState('VidOption')
 
 		elif display_state=='AuthorizedGreen':
 				self.IdentifyUser()
@@ -289,6 +289,14 @@ class Handler(object):
 		# 		                self.TD.set_Display_State('Logout')
 		# 		                self.guiEditor.updateState('Logout')
 
+                elif display_state=='TurnOff':
+                        if timeout_condition:
+                                self.TD.set_Display_State('Logout')
+                                self.guiEditor.updateState('Logout')
+                        else:
+                                self.TD.set_Display_State('Logout')
+                                self.guiEditor.updateState('Logout')
+        
 		elif display_state=='NoMatch1':
 				if timeout_condition:
 				    self.TD.set_Display_State('Logout')
@@ -302,35 +310,7 @@ class Handler(object):
 						self.TD.set_Display_State('Logout')
 						self.guiEditor.updateState('Logout')
 
-		# elif display_state=='UseMachine2':
-		# 		if timeout_condition:
-		# 		    self.TD.set_Display_State('Logout')
-		# 		    self.guieditor.updateState('Logout')
-		# 		else:
-		# 		    self.TD.set_Display_State('Logout')
-		# 		    self.guieditor.updateState('Logout')
-		# elif display_state=='NotRead2':
-		# 		if timeoout_condition:
-		# 		    self.TD.set_Display_State('Logout')
-		# 		    self.guiEditor.updateState('Logout')
-		# 		else:
-		# 		    if flow_input==1:
-		# 		        self.TD.set_Display_State('fpsInput2')
-		# 		        self.guiEditor.updateState('fpsInput2')
-		# 		    elif flow_input==2:
-		# 		        self.TD.set_Display_State('Logout')
-		# 		        self.guiEditor.updateState('Logout')
-		# elif display_state=='NoMatch2':
-		# 		if timeout_condition:
-		# 		    self.TD.set_Display_State('Logout')
-		# 		    self.guieditor.updateState('Logout')
-		# 		else:
-		# 		    if flow_input==1:
-		# 		        self.TD.set_Display_State('fpsInput2')
-		# 		        self.guieditor.updateState('fpsInput2')
-		# 		    elif flow_input==2:
-		# 		        self.TD.set_Display_State('Logout')
-		# 		        self.guieditor.updateState('Logout')
+
                         
                         
 
@@ -339,30 +319,20 @@ class Handler(object):
 			return ID<10000000
 	def AuthorizationDatabase(self,ID): #function reads database for training level
 		#function not yet implemented, enter a training level to return for testing purposes
-		# TL= authorization_reader.CheckAuthorizationDatabase(ID,"Mill",self.directory+'/AuthorizationDatabase')
-		# TL=int(TL)
-		# if TL == 999:
-		# 	print "error did not read TL"
-		# else:
-		# 	self.TD._Training_Level = TL
-		# return self.TD._Training_Level
-
-		if ID==1234567:
-			self.TD._Training_Level = 2
-		elif ID==7654321:
-			self.TD._Training_Level = 3
-		elif ID==2765750:
-			self.TD._Training_Level = 3
+		TL= authorization_reader.CheckAuthorizationDatabase(ID,"Mill",'/home/pi/Desktop/NUShop2/AuthorizationDatabase')
+		TL=int(TL)
+		if TL == 999:
+			print "error did not read TL"
 		elif ID==9999999:
 			self.EnrollUser()
 			self.TD._Training_Level = 0
 		else:
-			self.TD._Training_Level = 0
+			self.TD._Training_Level = TL
 		return self.TD._Training_Level
+
 		
 	def IdentifyUser(self): #function reads database for fingerprint template
-                #function returns 0 if not read, 1 if doesn't match, 2 if matches                                                                                                                                                       
-                #function not yet implemented, enter a fingerprint template to return for testing purposes
+                
 		F = threading.Thread(name='FPS', target=self.Fingerprint)
 		threads.append(F)
 		F.start()

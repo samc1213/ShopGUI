@@ -8,6 +8,7 @@ class Thread_Data(object):
 		self._Display = 'HelloWorld'
 		self._ID='1234567'
 		self._Sec_Count = 0
+		self._Training_Level = 999
 		#self.guiEditor = guiEditor
 		pass
     def get_Sys_State(self):
