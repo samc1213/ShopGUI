@@ -38,7 +38,7 @@ def setUp(Working_directory):
 
 if __name__ == '__main__':
     try:
-
+        running=True
         print('sys.argv[0] =', sys.argv[0])             
         pathname = os.path.dirname(sys.argv[0])
         print('full path =', os.path.abspath(pathname)) 
@@ -55,15 +55,14 @@ if __name__ == '__main__':
             elif arg.lower() == "handler":
                 #testing push
                 print 'Running in handler test mode...'
-                handler = Handler(reader, observer)
+                handler = Handler(reader, observer,running)
                 handler.StartWorkerThreads()
         else:
-            handler = Handler(reader, observer,Working_directory)
+            handler = Handler(reader, observer,Working_directory,running,root)
             handler.StartWorkerThreads()
             mainGuiLoop(root)
     except Exception as e:
         print e
+
     finally:
-        running = False
-        root.destroy()
         raise

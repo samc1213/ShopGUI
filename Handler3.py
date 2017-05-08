@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import subprocess
 import threading
 import time
 import logging
@@ -17,11 +17,12 @@ threads = []
 
 
 class Handler(object):
-	def __init__(self, guiEditor, observer,Working_directory):
+	def __init__(self, guiEditor, observer,Working_directory, Running,root):
 		self.directory = Working_directory;
 		self.TD = Thread_Data(guiEditor)
 		self.fps = FPS_Class(self.directory)
 		self.guiEditor = guiEditor
+		self.root = root
 		self.port = serial.Serial(
 				"/dev/ttyAMA0",
 				baudrate=9600,
@@ -29,7 +30,7 @@ class Handler(object):
 
 		#logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s',)
 
-		self.running = False
+		self.running = Running
 		self.observer = observer
 		self.observer.addTimeoutListener(self.onTimeout)
 		self.observer.addInputListener(self.onInput_H)
@@ -84,7 +85,7 @@ class Handler(object):
 	def Fingerprint(self):
 		ID=self.TD._ID
 		print 'entering identify thread'
-		if self.fps.FPS_Identify(ID):
+		if self.fps.FPS_Identify(ID) == 1:
 			print "userfound"
 			if self.TD._Training_Level == 3:
 				self.Alert('green')
@@ -136,6 +137,7 @@ class Handler(object):
 
 			time.sleep(.1)
 		GPIO.Cleanup()
+		print ("Csense shutting down")
 		logging.debug('Csense shutting Down')
 		
 	def FlowLogic(self,display_state,timeout_condition,flow_input):
@@ -351,6 +353,9 @@ class Handler(object):
 			self.TD._Training_Level = 3
 		elif ID==2765750:
 			self.TD._Training_Level = 3
+		elif ID==9999999:
+			self.EnrollUser()
+			self.TD._Training_Level = 0
 		else:
 			self.TD._Training_Level = 0
 		return self.TD._Training_Level
@@ -361,6 +366,13 @@ class Handler(object):
 		F = threading.Thread(name='FPS', target=self.Fingerprint)
 		threads.append(F)
 		F.start()
+
+	def EnrollUser(self):
+		self.running=False
+		time.sleep(5)
+		self.root.destroy()
+		subprocess.call('python '+ self.directory +'/Enroll.py', shell=True)
+		os._exit(1)
 
 
 
