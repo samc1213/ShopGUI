@@ -1,4 +1,2 @@
-env/
-*.pyc
- 
-template_database.txt
+env/*.pyc
+/template_database.txt
