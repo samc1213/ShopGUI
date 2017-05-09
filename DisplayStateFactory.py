@@ -2,6 +2,7 @@ from Constants import DEFAULT_DISPLAYIMAGE_FILEPATH
 from DisplayMessage import DisplayMessage
 from DisplayImage import DisplayImage
 from DisplayVideo import DisplayVideo
+from DisplayPowerPoint import DisplayPowerPoint
 from DisplayChoices import DisplayChoices
 from DisplayEntry import DisplayEntry
 from PIL import Image, ImageTk
@@ -19,17 +20,23 @@ class DisplayStateFactory(object):
         pilPhoto = ImageTk.PhotoImage(photo)
         self.displayImage = DisplayImage(root, root.winfo_screenheight(), pilPhoto, self.onInput)
         self.displayVideo = DisplayVideo(root, root.winfo_screenheight(), pilPhoto)
+        self.displayPowerPoint = DisplayPowerPoint(root, root.winfo_screenheight(), pilPhoto)
         self.displayChoices = DisplayChoices(root, root.winfo_screenheight(), self.onInput)
         self.displayEntry = DisplayEntry(root, root.winfo_screenheight(), onInput)
         root.bind("<Key>", self.onKeyPressed)
         self.clearDisplay()
 
     def onKeyPressed(self, event):
+        #print event.keysym
         if event.keysym == "Return" or event.keysym == "KP_Enter":
             # print "Enter was Pressed: giving display entry control"
             self.displayEntry.onReturn(event)
         elif event.keycode == 112:
             GPIO2.LED_ON('red')
+        elif event.keysym == "KP_4":
+            self.displayPowerPoint.updateNumber(-1)
+        elif event.keysym == "KP_6":
+            self.displayPowerPoint.updateNumber(1)
         else: 
             # print "Enter was not pressed giving display choices control"
             self.displayChoices.onKeyPressed(event)
@@ -39,6 +46,7 @@ class DisplayStateFactory(object):
         self.displayImage.hide()
         self.displayMessage.hide()
         self.displayVideo.hide()
+        self.displayPowerPoint.hide()
         self.displayChoices.hide()
         self.displayEntry.hide()
 
@@ -74,5 +82,9 @@ class DisplayStateFactory(object):
             self.displayEntry.updateBackground(databaseEntry['color'])
             self.displayEntry.updateTextSize(databaseEntry['textSize'])
             self.displayEntry.show()
+        elif databaseEntry['templateNo'] == 6:
+            self.displayPowerPoint.show()
+            self.currentDisplayState = fileInput
+            self.displayPowerPoint.playPowerPoint(databaseEntry['fileAddress'])
         else:
             raise 'Invalid templateNo: {0}'.format(databaseEntry['templateNo'])
