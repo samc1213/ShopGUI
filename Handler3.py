@@ -15,7 +15,6 @@ threads = []
 
 
 
-
 class Handler(object):
 	def __init__(self, guiEditor, observer,Working_directory, Running,root):
 		self.directory = Working_directory;
@@ -27,6 +26,8 @@ class Handler(object):
 				"/dev/ttyAMA0",
 				baudrate=9600,
 				timeout=None)	# <12>port = None
+
+
 
 		#logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s',)
 
@@ -85,7 +86,8 @@ class Handler(object):
 	def Fingerprint(self):
 		ID=self.TD._ID
 		print 'entering identify thread'
-		if self.fps.FPS_Identify(ID) == 1:
+		FPS_Return = self.fps.FPS_Identify(ID)
+		if FPS_Return == 1:
 			print "userfound"
 			if self.TD._Training_Level == 3:
 				self.Alert('green')
@@ -95,10 +97,23 @@ class Handler(object):
 				self.Alert('yellow')
 				self.TD.set_Display_State('UseMachineYellow')
 				self.guiEditor.updateState('UseMachineYellow')
-		else:
-			print "usernotfound"
+		elif FPS_Return==2:
+			print "finger was not detected"
+			self.TD.set_Display_State('Logout')
+			self.guiEditor.updateState('Logout')
+
+		elif FPS_Return==3:
+			print "ID did not match fingerprint"
 			self.TD.set_Display_State('NoMatch1')
 			self.guiEditor.updateState('NoMatch1')
+		elif FPS_Return==0:
+			print "user not found in database"
+			self.TD.set_Display_State('NoMatch1')
+			self.guiEditor.updateState('NoMatch1')
+		else: 
+			self.TD.set_Display_State('NoMatch1')
+			self.guiEditor.updateState('NoMatch1')
+
 
 
 
@@ -129,8 +144,8 @@ class Handler(object):
 
 
 
-			if GPIO.ReadButton() and Alert=="blue_":
-				self.Alert("red__")
+			if GPIO.ReadButton() and Alert=="blue":
+				self.Alert("red")
 				self.TD.set_Display_State('TurnOff')
 				self.guiEditor.updateState('TurnOff')
 
@@ -217,7 +232,7 @@ class Handler(object):
 				self.guiEditor.updateState('Logout')
 
 		elif display_state =='Logout': #Do this after NotAuthorized has finished
-                                self.Alert('blue_')
+                                self.Alert('blue')
 				self.TD.set_Display_State('Welcome1')
 				self.guiEditor.updateState('Welcome1')
 
@@ -256,9 +271,6 @@ class Handler(object):
 				self.TD.set_Display_State('fpsInput1')
 				self.guiEditor.updateState('fpsInput1')
 
-		elif display_state=='fpsInput1':
-				self.TD.set_Display_State('Logout')
-				self.guiEditor.updateState('Logout')
 
                 
 		elif display_state=='UseMachineGreen':
@@ -319,20 +331,21 @@ class Handler(object):
 			return ID<10000000
 	def AuthorizationDatabase(self,ID): #function reads database for training level
 		#function not yet implemented, enter a training level to return for testing purposes
-		TL= authorization_reader.CheckAuthorizationDatabase(ID,"Mill",'/home/pi/Desktop/NUShop2/AuthorizationDatabase')
-		TL=int(TL)
-		if TL == 999:
-			print "error did not read TL"
-		elif ID==9999999:
+		if ID==9999999:
 			self.EnrollUser()
 			self.TD._Training_Level = 0
 		else:
-			self.TD._Training_Level = TL
+			TL= authorization_reader.CheckAuthorizationDatabase(ID,"Mill",self.directory+'/AuthorizationDatabase')
+			TL=int(TL)
+
+			if TL == 999:
+				print "error did not read TL"
+			else:
+				self.TD._Training_Level = TL
 		return self.TD._Training_Level
 
 		
 	def IdentifyUser(self): #function reads database for fingerprint template
-                
 		F = threading.Thread(name='FPS', target=self.Fingerprint)
 		threads.append(F)
 		F.start()

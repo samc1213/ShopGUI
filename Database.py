@@ -73,9 +73,9 @@ class template_database(object):
         return traininglevel
 
     def SetAuthorizationLevel(self,ID_N,filename,newTLMill, newTLLathe):
-        newline=str(ID_N)+ ', Mill ,' + str(newTLMill) + ', 01/01/2017 , Lathe , ' + str(newTLLathe) + ', 01/01/2017 '
+        newline=str(ID_N)+ ',Mill,' + str(newTLMill) + ',01/01/2017,Lathe, ' + str(newTLLathe) + ',01/01/2017'
         if self.CheckAuthorizationDatabase(ID_N,'Mill',filename) == 999:
-            print 'user doesnt exist'
+            print 'New User!'
             lines=self.load_database(filename)
             
             lines.append(newline)
