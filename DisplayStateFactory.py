@@ -6,8 +6,6 @@ from DisplayPowerPoint import DisplayPowerPoint
 from DisplayChoices import DisplayChoices
 from DisplayEntry import DisplayEntry
 from PIL import Image, ImageTk
-from GPIO_Class import GPIO_Class
-GPIO2=GPIO_Class()
 
 
 class DisplayStateFactory(object):
@@ -31,11 +29,9 @@ class DisplayStateFactory(object):
         if event.keysym == "Return" or event.keysym == "KP_Enter":
             # print "Enter was Pressed: giving display entry control"
             self.displayEntry.onReturn(event)
-        elif event.keycode == 112:
-            GPIO2.LED_ON('red')
-        elif event.keysym == "KP_4":
+        elif event.keysym == "KP_4" or event.keycode == 81:
             self.displayPowerPoint.updateNumber(-1)
-        elif event.keysym == "KP_6":
+        elif event.keysym == "KP_6" or event.keycode == 83:
             self.displayPowerPoint.updateNumber(1)
         else: 
             # print "Enter was not pressed giving display choices control"

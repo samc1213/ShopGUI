@@ -60,6 +60,7 @@ class Handler(object):
 		time.sleep(.5)
 		GPIO.LED_ON("green")
 		time.sleep(.5)
+		GPIO.LED_ON("blue")
 
 		C = threading.Thread(name='Csense', target=self.Csense)
 		
@@ -67,12 +68,10 @@ class Handler(object):
 
 
 		threads.append(C)
-		#threads.append(F)
 		threads.append(T)
 
 
 		C.start()
-		#F.start()
 		T.start()
 
 		self.FlowLogic('Welcome1',1,9999)
@@ -144,10 +143,10 @@ class Handler(object):
 
 
 
-			if GPIO.ReadButton() and Alert=="blue":
-				self.Alert("red")
-				self.TD.set_Display_State('TurnOff')
-				self.guiEditor.updateState('TurnOff')
+			# if GPIO.ReadButton() and Alert=="blue":
+			# 	self.Alert("red")
+			# 	self.TD.set_Display_State('TurnOff')
+			# 	self.guiEditor.updateState('TurnOff')
 
 
 			time.sleep(.1)
@@ -162,6 +161,7 @@ class Handler(object):
 
 		if display_state=='Welcome1': #Do this after welcome has finished
 				if timeout_condition: #function called on timeout
+					self.Alert('blue')
 					self.TD.set_Display_State("Welcome2") 
 					self.guiEditor.updateState('Welcome2')#stay on welcome screen
 				else:
@@ -170,6 +170,7 @@ class Handler(object):
 
 		elif display_state=='Welcome2': #Do this after welcome has finished
 				if timeout_condition: #function called on timeout
+					self.Alert('blue')
 					self.TD.set_Display_State("Welcome1") 
 					self.guiEditor.updateState('Welcome1')#stay on welcome screen
 				else:
@@ -232,7 +233,7 @@ class Handler(object):
 				self.guiEditor.updateState('Logout')
 
 		elif display_state =='Logout': #Do this after NotAuthorized has finished
-                                self.Alert('blue')
+				self.Alert('blue')
 				self.TD.set_Display_State('Welcome1')
 				self.guiEditor.updateState('Welcome1')
 
