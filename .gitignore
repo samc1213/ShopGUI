@@ -1,2 +1,2 @@
 env/*.pyc
-/template_database.txt
+template_database*
