@@ -9,7 +9,7 @@ from GPIO_Class import GPIO_Class
 from Thread_Data_Object import Thread_Data
 from FPS_Class import FPS_Class
 from Database import template_database
-authorization_reader=template_database()
+from Client_Class import Net_DB_Client
 GPIO = GPIO_Class()
 threads = []
 
@@ -18,10 +18,12 @@ threads = []
 class Handler(object):
 	def __init__(self, guiEditor, observer,Working_directory, Running,root):
 		self.directory = Working_directory;
-		self.TD = Thread_Data(guiEditor)
-		self.fps = FPS_Class(self.directory)
+		self.TD = Thread_Data()
+		self.fps = FPS_Class(self.TD)
 		self.guiEditor = guiEditor
 		self.root = root
+		self.host = 'localhost'
+		self.NetworkPort = 8089
 		self.port = serial.Serial(
 				"/dev/ttyAMA0",
 				baudrate=9600,
@@ -185,6 +187,7 @@ class Handler(object):
 					ID = flow_input
 					if self.Check_ID_is_7_digits(ID):
 						Training_Level=self.AuthorizationDatabase(ID)
+						print Training_Level
 						if Training_Level==0:
 							self.TD.set_Display_State("UserNotFound") 
 							self.guiEditor.updateState('UserNotFound')
@@ -199,7 +202,8 @@ class Handler(object):
 						elif Training_Level==3:
 							self.TD._ID=ID
 							self.TD.set_Display_State('AuthorizedGreen')
-							self.guiEditor.updateState('AuthorizedGreen')                             
+							self.guiEditor.updateState('AuthorizedGreen') 
+                             
 					else: #if ID is not 7 digits
 						self.TD.set_Display_State("ID_Not_Valid") 
 						self.guiEditor.updateState('ID_Not_Valid')
@@ -323,6 +327,10 @@ class Handler(object):
 						self.TD.set_Display_State('Logout')
 						self.guiEditor.updateState('Logout')
 
+		elif display_state=='ServerDown':
+			    self.TD.set_Display_State('Logout')
+			    self.guiEditor.updateState('Logout')
+
 
                         
                         
@@ -336,13 +344,19 @@ class Handler(object):
 			self.EnrollUser()
 			self.TD._Training_Level = 0
 		else:
-			TL= authorization_reader.CheckAuthorizationDatabase(ID,"Mill",self.directory+'/AuthorizationDatabase')
-			TL=int(TL)
-
-			if TL == 999:
-				print "error did not read TL"
-			else:
-				self.TD._Training_Level = TL
+			try:
+				Network_Client = Net_DB_Client(self.host,self.NetworkPort)
+				Network_Client.Connect()
+				Data = Network_Client.Request_User_Data(ID)
+				self.TD._Training_Level = int(Data[1]) 
+				self.TD._UserTemplate = Data[2]
+				Network_Client = None
+			except Exception as e:
+				print e
+				self.TD._Training_Level = 5
+				self.TD._UserTemplate = 'notemplate'
+				self.TD.set_Display_State('ServerDown')
+				self.guiEditor.updateState('ServerDown') 
 		return self.TD._Training_Level
 
 		

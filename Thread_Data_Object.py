@@ -2,15 +2,19 @@ import sys
 
 
 class Thread_Data(object):
-    def __init__(self,guiEditor):
-		self._Sys = 'IDLE'
-		self._Alert = 'blue_'
-		self._Display = 'HelloWorld'
-		self._ID='1234567'
-		self._Sec_Count = 0
-		self._Training_Level = 999
-		#self.guiEditor = guiEditor
-		pass
+    def __init__(self):
+        self._Sys = 'IDLE'
+        self._Alert = 'blue_'
+        self._Display = 'HelloWorld'
+
+        self._Sec_Count = 0
+
+        self._ID='1234567'
+        self._Training_Level = 999
+        self._UserTemplate = 'notemplate'
+        #self.guiEditor = guiEditor
+        pass
+
     def get_Sys_State(self):
         return self._Sys
     def get_Display_State(self):

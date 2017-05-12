@@ -65,4 +65,4 @@ if __name__ == '__main__':
         print e
 
     finally:
-        raise
+        print "end of App \n"

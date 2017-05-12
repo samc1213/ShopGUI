@@ -2,7 +2,7 @@ from Constants import DEFAULT_DISPLAYIMAGE_FILEPATH
 from DisplayMessage import DisplayMessage
 from DisplayImage import DisplayImage
 from DisplayVideo import DisplayVideo
-from DisplayPowerPoint import DisplayPowerPoint
+#from DisplayPowerPoint import DisplayPowerPoint
 from DisplayChoices import DisplayChoices
 from DisplayEntry import DisplayEntry
 from PIL import Image, ImageTk
@@ -18,7 +18,7 @@ class DisplayStateFactory(object):
         pilPhoto = ImageTk.PhotoImage(photo)
         self.displayImage = DisplayImage(root, root.winfo_screenheight(), pilPhoto, self.onInput)
         self.displayVideo = DisplayVideo(root, root.winfo_screenheight(), pilPhoto)
-        self.displayPowerPoint = DisplayPowerPoint(root, root.winfo_screenheight(), pilPhoto)
+        #self.displayPowerPoint = DisplayPowerPoint(root, root.winfo_screenheight(), pilPhoto)
         self.displayChoices = DisplayChoices(root, root.winfo_screenheight(), self.onInput)
         self.displayEntry = DisplayEntry(root, root.winfo_screenheight(), onInput)
         root.bind("<Key>", self.onKeyPressed)
@@ -30,9 +30,11 @@ class DisplayStateFactory(object):
             # print "Enter was Pressed: giving display entry control"
             self.displayEntry.onReturn(event)
         elif event.keysym == "KP_4" or event.keycode == 81:
-            self.displayPowerPoint.updateNumber(-1)
+            #self.displayPowerPoint.updateNumber(-1)
+            print "Powerpoint_left"
         elif event.keysym == "KP_6" or event.keycode == 83:
-            self.displayPowerPoint.updateNumber(1)
+            print "Powerpoint_right"
+            #self.displayPowerPoint.updateNumber(1)
         else: 
             # print "Enter was not pressed giving display choices control"
             self.displayChoices.onKeyPressed(event)
@@ -42,7 +44,7 @@ class DisplayStateFactory(object):
         self.displayImage.hide()
         self.displayMessage.hide()
         self.displayVideo.hide()
-        self.displayPowerPoint.hide()
+        #self.displayPowerPoint.hide()
         self.displayChoices.hide()
         self.displayEntry.hide()
 
@@ -79,8 +81,8 @@ class DisplayStateFactory(object):
             self.displayEntry.updateTextSize(databaseEntry['textSize'])
             self.displayEntry.show()
         elif databaseEntry['templateNo'] == 6:
-            self.displayPowerPoint.show()
+            #self.displayPowerPoint.show()
             self.currentDisplayState = fileInput
-            self.displayPowerPoint.playPowerPoint(databaseEntry['fileAddress'])
+            #self.displayPowerPoint.playPowerPoint(databaseEntry['fileAddress'])
         else:
             raise 'Invalid templateNo: {0}'.format(databaseEntry['templateNo'])

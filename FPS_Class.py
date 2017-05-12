@@ -42,9 +42,9 @@ database=DB()
 
 
 class FPS_Class(object):
-        def __init__(self,directory):
-				self.filename=directory+'/template_database'
-				pass
+        def __init__(self,thread_data):
+                self.thread_data=thread_data
+                pass
 
 
 
@@ -112,7 +112,8 @@ class FPS_Class(object):
 
                         strdata +=item
 
-                database.write_template(self.filename,ID_N,strdata,overwrite) #write to text file with accompanying ID
+                #database.write_template(self.filename,ID_N,strdata,overwrite) #write to text file with accompanying ID
+                self.thread_data._UserTemplate = strdata; 
 
 
 
@@ -141,8 +142,9 @@ class FPS_Class(object):
                 if recvPkg[4] == NACK:
                         print("error: %s" % recvPkg[3])
                         return -2
-                template=database.check_database(self.filename,ID_N)
-                if template==0:
+                        
+                template = self.thread_data._UserTemplate;
+                if template=='notemplate':
                         print('ID not found in database')
                         return 0
                 else:
@@ -234,7 +236,7 @@ class FPS_Class(object):
             else:
                 raise ValueError('ID number must be seven digits')
 
-        def FPS_Get_Template(self,ID_N,overwrite=0): #saves fingerprint template with ID number
+        def FPS_Get_Template(self,ID_N,overwrite=1): #saves fingerprint template with ID number
             self.CheckIDsize(ID_N)
             self.FPS_RemoveAll()
             self.FPS_Enroll_user()
