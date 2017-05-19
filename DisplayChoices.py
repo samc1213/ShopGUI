@@ -16,7 +16,11 @@ class DisplayChoices(AbstractDisplay):
         if self.choices is not None and event.char in [str(i) for i in range(1, len(self.choices))]:
             self.onInput(event.char)
 
-    def updateText(self, listOfChoices):
+    def updateText(self, messagelist,RunTimeMessage):
+        listOfChoices=[]
+        for line in messagelist:
+            line = line.replace('{Run_Time_Message}', RunTimeMessage)
+            listOfChoices.append(line)
         self.choices = listOfChoices
         displayString = listOfChoices[0] + '\n'
         for choiceIndex in range(1, len(listOfChoices)):

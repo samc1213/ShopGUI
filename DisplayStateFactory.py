@@ -1,5 +1,4 @@
 from Constants import DEFAULT_DISPLAYIMAGE_FILEPATH
-from DisplayMessage import DisplayMessage
 from DisplayImage import DisplayImage
 from DisplayVideo import DisplayVideo
 #from DisplayPowerPoint import DisplayPowerPoint
@@ -15,7 +14,6 @@ class DisplayStateFactory(object):
         self.root = root
         self.currentDisplayState = None
         self.onInput = onInput
-        self.displayMessage = DisplayMessage(root, root.winfo_screenheight(), self.onInput)
         self.displayRunTimeMessage = DisplayRunTimeMessage(root, root.winfo_screenheight(), self.onInput)
         photo = Image.open(Working_directory+'/'+DEFAULT_DISPLAYIMAGE_FILEPATH)
         pilPhoto = ImageTk.PhotoImage(photo)
@@ -45,7 +43,6 @@ class DisplayStateFactory(object):
     def clearDisplay(self):
         self.currentDisplayState = None
         self.displayImage.hide()
-        self.displayMessage.hide()
         self.displayVideo.hide()
         #self.displayPowerPoint.hide()
         self.displayChoices.hide()
@@ -57,11 +54,11 @@ class DisplayStateFactory(object):
             self.clearDisplay()
             self.root.configure(background=databaseEntry['color'])
         if databaseEntry['templateNo'] == 1:
-            self.displayMessage.updateText(databaseEntry['stringList'])
+            self.displayRunTimeMessage.updateText(databaseEntry['stringList'],self.ThreadData.RunTimeMessage)
             self.currentDisplayState = fileInput
-            self.displayMessage.show()
-            self.displayMessage.updateBackground(databaseEntry['color'])
-            self.displayMessage.updateTextSize(databaseEntry['textSize'])
+            self.displayRunTimeMessage.show()
+            self.displayRunTimeMessage.updateBackground(databaseEntry['color'])
+            self.displayRunTimeMessage.updateTextSize(databaseEntry['textSize'])
         elif databaseEntry['templateNo'] == 2:
             photo = Image.open(databaseEntry['fileAddress'])
             pilPhoto = ImageTk.PhotoImage(photo)
@@ -73,7 +70,7 @@ class DisplayStateFactory(object):
             self.currentDisplayState = fileInput
             self.displayVideo.playVideo(databaseEntry['fileAddress'])
         elif databaseEntry['templateNo'] == 4:
-            self.displayChoices.updateText(databaseEntry['stringList'])
+            self.displayChoices.updateText(databaseEntry['stringList'],self.ThreadData.RunTimeMessage)
             self.currentDisplayState = fileInput
             self.displayChoices.updateBackground(databaseEntry['color'])
             self.displayChoices.updateTextSize(databaseEntry['textSize'])
@@ -88,11 +85,5 @@ class DisplayStateFactory(object):
             #self.displayPowerPoint.show()
             self.currentDisplayState = fileInput
             #self.displayPowerPoint.playPowerPoint(databaseEntry['fileAddress'])
-        elif databaseEntry['templateNo'] == 7:
-            self.displayRunTimeMessage.updateText(databaseEntry['stringList'],self.ThreadData.RunTimeMessage)
-            self.currentDisplayState = fileInput
-            self.displayRunTimeMessage.show()
-            self.displayRunTimeMessage.updateBackground(databaseEntry['color'])
-            self.displayRunTimeMessage.updateTextSize(databaseEntry['textSize'])
         else:
             raise 'Invalid templateNo: {0}'.format(databaseEntry['templateNo'])
