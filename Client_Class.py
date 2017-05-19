@@ -10,10 +10,10 @@ import time
 MachineType=1
 
 class Net_DB_Client(object): #Network Database Class 
-	def __init__(self, host,port):
-		self.clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.host = host;
-		self.port = port;
+	def __init__(self):
+		self.clientsocket = socket.socket()
+		self.host = '192.168.1.150'
+		self.port = 12345
 
 		pass
 		
@@ -44,6 +44,7 @@ class Net_DB_Client(object): #Network Database Class
 				AuthorizationDatabaseMill = [ID,0,'notemplate']
 				return AuthorizationDatabaseMill
 			else:
+				print data
 				dataSplit = data.split(',')
 				AuthorizationDatabaseMill = [dataSplit[0],dataSplit[MachineType],dataSplit[3]]
 				return AuthorizationDatabaseMill
@@ -56,17 +57,26 @@ class Net_DB_Client(object): #Network Database Class
 		self.clientsocket.send(data)
 
 def Test():
-	NDC= Net_DB_Client('localhost',8089)
-	Send = input( 'send or receive')
-	ID =input("enter ID \n")
-	if Send:
-		NDC.Send_User_Data(ID,3,4, "5aa5")
-	else:
-		NDC.Request_User_Data(ID)
+
+	NDC= Net_DB_Client()
+	NDC.Connect()
+	#NDC.Ping()
+	# Send = input( 'send or receive')
+	# ID =input("enter ID \n")
+	# if Send:
+	# 	NDC.Send_User_Data(ID,3,4, "5aa5")
+	# else:
+	NDC.Request_User_Data('1234567')
 
 if __name__ == '__main__':
 	try:
-		Test()
+		Test()             
+		# s = socket.socket()        
+		# host = '192.168.1.150'# ip of raspberry pi 
+		# port = 12345               
+		# s.connect((host, port))
+		# print(s.recv(1024))
+		# s.close()
 	except Exception as e:
 		print e
 		raise e

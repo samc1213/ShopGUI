@@ -6,13 +6,13 @@ import time
 
 class FileReader(object):
 
-    def __init__(self, rootGUIWidget, databaseFilePath, inputFilePath, outputFilePath, guiObserver, Working_directory):
+    def __init__(self, rootGUIWidget, databaseFilePath, inputFilePath, outputFilePath, guiObserver, Working_directory,ThreadData):
         self.directory = Working_directory
         self.rootGUIWidget = rootGUIWidget
         self.inputFilePath = inputFilePath
         self.outputFilePath = outputFilePath
         self.readDatabaseFile(databaseFilePath)
-        self.factory = DisplayStateFactory(self.rootGUIWidget, self.onInput,self.directory)
+        self.factory = DisplayStateFactory(self.rootGUIWidget, self.onInput,self.directory,ThreadData)
         self.observer = guiObserver
         self.timeoutTimer = None
         self.timeoutTimer = Timer(10, lambda: self.initialTimer())

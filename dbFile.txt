@@ -29,3 +29,4 @@ TurnOff,4,Turn machine off; immediately;;Press enter to logout,1800,,#4E2A84,.1
 ServerDown,1,Failed to connect to server; ;Please ask trainers; for permission to use; machine offline,30,,#4E2A84,.06
 Logout,1,Logging Out,3,,#4E2A84,.1
 ID_Not_Valid,4,ID not Valid;1-Retry login;2-Logout,30,,#4E2A84,.1 
+ID_Echo,7,Are you user {Run_Time_Message}?,20,,#4E2A84,.07

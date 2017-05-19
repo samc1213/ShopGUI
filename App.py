@@ -13,12 +13,10 @@ import threading
 import sys
 import os
 from GuiObserver import GuiObserver
+from Thread_Data_Object import Thread_Data
 
 def test(reader):
-    reader.updateState('Welcome1')
-    time.sleep(5)
-    reader.updateState('PromptUserID')
-    time.sleep(5)
+    reader.updateState('ID_Echo')
 
 def mainGuiLoop(root):
     root.mainloop()
@@ -29,11 +27,11 @@ def setUp(Working_directory):
     root.overrideredirect(False)
     root.attributes('-fullscreen', True)
     root.configure(background=BACKGROUND_COLOR)
-
+    TD = Thread_Data()
     observer = GuiObserver()
-    reader = FileReader(root, Working_directory +'/dbFile.txt', Working_directory + '/inputFile.txt', Working_directory + '/outputFile.txt', observer, Working_directory)
+    reader = FileReader(root, Working_directory +'/dbFile.txt', Working_directory + '/inputFile.txt', Working_directory + '/outputFile.txt', observer, Working_directory,TD)
 
-    return reader, root, observer
+    return reader, root, observer,TD
 
 
 if __name__ == '__main__':
@@ -43,7 +41,7 @@ if __name__ == '__main__':
         pathname = os.path.dirname(sys.argv[0])
         print('full path =', os.path.abspath(pathname)) 
         Working_directory = os.path.abspath(pathname)
-        reader, root, observer = setUp(Working_directory)
+        reader, root, observer, TD = setUp(Working_directory)
 
         if len(sys.argv) == 2:
             arg = sys.argv[1]
@@ -58,7 +56,7 @@ if __name__ == '__main__':
                 handler = Handler(reader, observer,running)
                 handler.StartWorkerThreads()
         else:
-            handler = Handler(reader, observer,Working_directory,running,root)
+            handler = Handler(reader, observer,Working_directory,running,root,TD)
             handler.StartWorkerThreads()
             mainGuiLoop(root)
     except Exception as e:

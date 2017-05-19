@@ -4,9 +4,9 @@ import threading
 import time
 import logging
 import sys
+import os
 import serial
 from GPIO_Class import GPIO_Class
-from Thread_Data_Object import Thread_Data
 from FPS_Class import FPS_Class
 from Database import template_database
 from Client_Class import Net_DB_Client
@@ -16,14 +16,12 @@ threads = []
 
 
 class Handler(object):
-	def __init__(self, guiEditor, observer,Working_directory, Running,root):
+	def __init__(self, guiEditor, observer,Working_directory, Running,root,TD):
 		self.directory = Working_directory;
-		self.TD = Thread_Data()
+		self.TD = TD
 		self.fps = FPS_Class(self.TD)
 		self.guiEditor = guiEditor
 		self.root = root
-		self.host = 'localhost'
-		self.NetworkPort = 8089
 		self.port = serial.Serial(
 				"/dev/ttyAMA0",
 				baudrate=9600,
@@ -345,7 +343,7 @@ class Handler(object):
 			self.TD._Training_Level = 0
 		else:
 			try:
-				Network_Client = Net_DB_Client(self.host,self.NetworkPort)
+				Network_Client = Net_DB_Client()
 				Network_Client.Connect()
 				Data = Network_Client.Request_User_Data(ID)
 				self.TD._Training_Level = int(Data[1]) 

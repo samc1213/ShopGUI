@@ -5,15 +5,18 @@ from DisplayVideo import DisplayVideo
 #from DisplayPowerPoint import DisplayPowerPoint
 from DisplayChoices import DisplayChoices
 from DisplayEntry import DisplayEntry
+from DisplayRunTimeMessage import DisplayRunTimeMessage
 from PIL import Image, ImageTk
 
 
 class DisplayStateFactory(object):
-    def __init__(self, root, onInput,Working_directory):
+    def __init__(self, root, onInput,Working_directory,TD):
+        self.ThreadData = TD
         self.root = root
         self.currentDisplayState = None
         self.onInput = onInput
         self.displayMessage = DisplayMessage(root, root.winfo_screenheight(), self.onInput)
+        self.displayRunTimeMessage = DisplayRunTimeMessage(root, root.winfo_screenheight(), self.onInput)
         photo = Image.open(Working_directory+'/'+DEFAULT_DISPLAYIMAGE_FILEPATH)
         pilPhoto = ImageTk.PhotoImage(photo)
         self.displayImage = DisplayImage(root, root.winfo_screenheight(), pilPhoto, self.onInput)
@@ -47,6 +50,7 @@ class DisplayStateFactory(object):
         #self.displayPowerPoint.hide()
         self.displayChoices.hide()
         self.displayEntry.hide()
+        self.displayRunTimeMessage.hide()
 
     def updateDisplayState(self, databaseEntry, fileInput):
         if self.currentDisplayState != fileInput:
@@ -84,5 +88,11 @@ class DisplayStateFactory(object):
             #self.displayPowerPoint.show()
             self.currentDisplayState = fileInput
             #self.displayPowerPoint.playPowerPoint(databaseEntry['fileAddress'])
+        elif databaseEntry['templateNo'] == 7:
+            self.displayRunTimeMessage.updateText(databaseEntry['stringList'],self.ThreadData.RunTimeMessage)
+            self.currentDisplayState = fileInput
+            self.displayRunTimeMessage.show()
+            self.displayRunTimeMessage.updateBackground(databaseEntry['color'])
+            self.displayRunTimeMessage.updateTextSize(databaseEntry['textSize'])
         else:
             raise 'Invalid templateNo: {0}'.format(databaseEntry['templateNo'])

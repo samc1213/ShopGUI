@@ -239,12 +239,13 @@ class FPS_Class(object):
         def FPS_Get_Template(self,ID_N,overwrite=1): #saves fingerprint template with ID number
             self.CheckIDsize(ID_N)
             self.FPS_RemoveAll()
-            self.FPS_Enroll_user()
+            result = self.FPS_Enroll_user()
             self.startScanner()
             print("Saving template to database: ID = %d" % ID_N)
             ident=0# identity number on fingerprint scanner always zero
             self.get_template(CMD_GET_TEMPLATE, ID_N,overwrite,ident)
             self.stopScanner()
+            return result
 
         def FPS_Upload_Template(self,ID_N):
             self.CheckIDsize(ID_N)
@@ -300,7 +301,7 @@ class FPS_Class(object):
             self.waitForFinger(False)
             if self.captureFinger() < 0:
                     self.enrollFail()
-                    return
+                    return 0
             self.enroll(1)
             print("Remove finger")
             self.waitForFinger(True)
@@ -310,7 +311,7 @@ class FPS_Class(object):
             self.waitForFinger(False)
             if self.captureFinger() < 0:
                     self.enrollFail()
-                    return
+                    return 0
             self.enroll(2)
             print("Remove finger")
             self.waitForFinger(True)
@@ -319,11 +320,11 @@ class FPS_Class(object):
             self.waitForFinger(False)
             if self.captureFinger() < 0:
                     self.enrollFail()
-                    return
+                    return 0
 
             if self.enroll(3) != 0:
                     self.enrollFail()
-                    return
+                    return 0
 
             print("Remove finger")
             self.waitForFinger(True)
@@ -332,13 +333,16 @@ class FPS_Class(object):
             self.waitForFinger(False)
             if self.captureFinger() < 0:	# <10>
                     self.identFail()
-                    return
+                    return 0
             ident = self.identifyUser()
             if(ident >= 0 and ident < 200):	# <11>
 
 
                     print("Identity found: %d" % ident)
+                    found = 1
             else:
                     print("User not found")
+                    found = 0
             self.led(False)
             self.stopScanner()
+            return found

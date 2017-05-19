@@ -8,7 +8,7 @@ class Thread_Data(object):
         self._Display = 'HelloWorld'
 
         self._Sec_Count = 0
-
+        self.RunTimeMessage = 'DefaultRunTimeMessage'
         self._ID='1234567'
         self._Training_Level = 999
         self._UserTemplate = 'notemplate'
