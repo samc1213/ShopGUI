@@ -117,7 +117,7 @@ class FPS_Class(object):
 
 
 
-                time.sleep(1)
+                #time.sleep(1)
                 return recvPkg[3]
 
         def set_template(self,cmd,ID_N,param=0):

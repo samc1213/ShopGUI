@@ -328,6 +328,7 @@ class Handler(object):
 						self.guiEditor.updateState('ModOption')
 					if flow_input==2:
 						self.IdentifyUser()
+						time.sleep(1.5)
 						self.TD.set_Display_State('FPSinput')
 						self.guiEditor.updateState('FPSinput')			
 
@@ -337,6 +338,7 @@ class Handler(object):
 					self.guiEditor.updateState('ModOption')
 				if flow_input==2:
 					self.IdentifyUser()
+					time.sleep(1.5)
 					self.TD.set_Display_State('FPSinput')
 					self.guiEditor.updateState('FPSinput')
 
@@ -377,6 +379,7 @@ class Handler(object):
 					else:
 					    if flow_input==1:
 							self.IdentifyUser()
+							time.sleep(1.5)
 							self.TD.set_Display_State('FPSinput')
 							self.guiEditor.updateState('FPSinput')
 					    elif flow_input==2:
@@ -390,6 +393,7 @@ class Handler(object):
 					else:
 					    if flow_input==1:
 							self.IdentifyUser()
+							time.sleep(1.5)
 							self.TD.set_Display_State('FPSinput')
 							self.guiEditor.updateState('FPSinput')
 					    elif flow_input==2:
