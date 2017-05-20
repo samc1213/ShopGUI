@@ -16,7 +16,7 @@ from GuiObserver import GuiObserver
 from Thread_Data_Object import Thread_Data
 
 def test(reader):
-    reader.updateState('ID_Echo')
+    reader.updateState('Mod3')
 
 def mainGuiLoop(root):
     root.mainloop()

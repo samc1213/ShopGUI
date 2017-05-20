@@ -1,32 +1,31 @@
 DisplayState,Template #,StringList(; delimited),Duration,FileAddress,BackgroundColor,fontsize
-HelloWorld,1,Hello World,20,,#4E2A84,.1
 Welcome1,1,Welcome;;Press enter to continue,10,,#4E2A84,.07
 Welcome2,1,Welcome;;Press enter to continue,10,,#4E2A84,.07
 PromptUserID,5,Enter ID,30,,#4E2A84,.1
-eyeImage,2,,10,images/testimage.jpg,#4E2A84,.1
+ID_Echo,4,Hi user {Run_Time_Message};;1-Continue;2-This isn't me,30,,#4E2A84,.08
 OkGo,3,,10,images/image-{NUMBER}.jpeg,#4E2A84,.1
-Test,2,,10,images/image-0001.jpeg,#4E2A84,.1
-Choices,4,choose a choice:;choice1;choice2;choice3,10,,#4E2A84,.1
-Input,5,ID =,30,,#4E2A84,.1
 UserNotFound,4,User Not Found;1-Retry login;2-Logout,30,,#4E2A84,.1
 NotAuthorized,1,You are not authorized;to use this machine;;Press enter to log out,10,,#4E2A84,.1
-FurtherTraining,4,You are authorized;but may require;additional training;;Press enter to proceed,30,,#4E2A84,.1
-AuthorizedGreen,4,You are authorized to;use this machine;;Press enter to proceed,30,,#4E2A84,.1
-VidOption,4, How would you like;to proceed?;;1-View Tutorial Powerpoint;2-Use machine,30,,#4E2A84,.1
-Video,2,,10,images/testimage.jpg,#4E2A84,.1
-Video_Prep1,1,,1,,#4E2A84,.1
-Video3,2,,60,images/Mill/Slide-0001.JPG,#4E2A84,.1
-Video1,6,,60,images/Mill/Slide-{NUMBER}.JPG,#4E2A84,.1
-fpsInput1,1,Please scan fingerprint,40,,#4E2A84,.1
-fpsInput2,1,Please scan fingerprint,40,,#4E2A84,.1
-NotRead1,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1
-NotRead2,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1
-NoMatch1,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1
-NoMatch2,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1
+ConditionalAuthorization,4,You are authorized;but require;additional training;;Press enter to proceed,30,,#4E2A84,.1
+AuthorizedGreen,4,You are authorized to;use this machine;;1-Watch training modules;2-Use machine,30,,#4E2A84,.1
+AuthorizedSupervisor,4,You are an;authorized supervisor;;Press enter to proceed,30,,#4E2A84,.08
+ModOption,4, Please choose from the;following training modules;;1-Powerpoint;2-Image;3-Video,30,,#4E2A84,.08
+ModPrep1,1,Use the right arrow to move forward;Use the left arrow to move back;;Press enter to continue,30,,#4E2A84,.06
+ModPrep2,1,  ,.1,,#4E2A84,.06
+ModPrep3,1,  ,.1,,#4E2A84,.08
+ModClear1,1,  ,.1,,#4E2A84,.08
+ModClear2,1,  ,.1,,#4E2A84,.08
+ModClear3,1,  ,.1,,#4E2A84,.08
+Mod1,6,Training Module 1,180,images/Mill/Slide-{NUMBER}.JPG,#4E2A84,.08
+Mod2,2,Training Module 2,180,images/testimage.jpg,#4E2A84,.08
+Mod3,3,Training Module 3,180,images/image-{NUMBER}.jpeg,#4E2A84,.08
+Rewatch,4,How would you like to proceed?;;1-Rewatch modules;2-Use machine,30,,#4E2A84,.08
+FPSinput,1,Please scan fingerprint,40,,#4E2A84,.1
+NotRead,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1
+NoMatch,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1
 UseMachineGreen,4,You may now use; the machine;;Press enter to logout,1800,,#00FF00,.1
-UseMachineYellow,4,You may now use the; machine but may; require new training;;Press enter to logout,1800,,#FFFF00,.1
+UseMachineYellow,4,You may now use the; machine but may; require new training;;Press enter to logout,1800,,#E5E500,.1
 TurnOff,4,Turn machine off; immediately;;Press enter to logout,1800,,#4E2A84,.1
 ServerDown,1,Failed to connect to server; ;Please ask trainers; for permission to use; machine offline,30,,#4E2A84,.06
 Logout,1,Logging Out,3,,#4E2A84,.1
 ID_Not_Valid,4,ID not Valid;1-Retry login;2-Logout,30,,#4E2A84,.1 
-ID_Echo,4,Are you user {Run_Time_Message}?; ; Hello,20,,#4E2A84,.07

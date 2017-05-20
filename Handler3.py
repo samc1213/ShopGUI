@@ -98,20 +98,17 @@ class Handler(object):
 				self.guiEditor.updateState('UseMachineYellow')
 		elif FPS_Return==2:
 			print "finger was not detected"
-			self.TD.set_Display_State('Logout')
-			self.guiEditor.updateState('Logout')
+			self.TD.set_Display_State('NotRead')
+			self.guiEditor.updateState('NotRead')
 
 		elif FPS_Return==3:
 			print "ID did not match fingerprint"
-			self.TD.set_Display_State('NoMatch1')
-			self.guiEditor.updateState('NoMatch1')
-		elif FPS_Return==0:
-			print "user not found in database"
-			self.TD.set_Display_State('NoMatch1')
-			self.guiEditor.updateState('NoMatch1')
+			self.TD.set_Display_State('NoMatch')
+			self.guiEditor.updateState('NoMatch')
 		else: 
-			self.TD.set_Display_State('NoMatch1')
-			self.guiEditor.updateState('NoMatch1')
+			self.TD.set_Display_State('NoMatch')
+			self.guiEditor.updateState('NoMatch')
+
 
 
 
@@ -155,182 +152,257 @@ class Handler(object):
 		logging.debug('Csense shutting Down')
 		
 	def FlowLogic(self,display_state,timeout_condition,flow_input):
-		if type(flow_input)==type(''):
-			if len(flow_input)>0:
-				flow_input=int(flow_input)
+		try:
+			if type(flow_input)==type(''):
+				if len(flow_input)>0:
+					flow_input=int(flow_input)
 
-		if display_state=='Welcome1': #Do this after welcome has finished
-				if timeout_condition: #function called on timeout
-					self.Alert('blue')
-					self.TD.set_Display_State("Welcome2") 
-					self.guiEditor.updateState('Welcome2')#stay on welcome screen
-				else:
-					self.TD.set_Display_State("PromptUserID")        
-					self.guiEditor.updateState('PromptUserID')#if user has pressed 1, move on
 
-		elif display_state=='Welcome2': #Do this after welcome has finished
-				if timeout_condition: #function called on timeout
-					self.Alert('blue')
-					self.TD.set_Display_State("Welcome1") 
-					self.guiEditor.updateState('Welcome1')#stay on welcome screen
-				else:
-					self.TD.set_Display_State("PromptUserID") 
-					self.guiEditor.updateState('PromptUserID')#if user has pressed 1 move on
+			if display_state=='Welcome1': #Do this after welcome has finished
+					if timeout_condition: #function called on timeout
+						self.Alert('blue')
+						self.TD.set_Display_State("Welcome2") 
+						self.guiEditor.updateState('Welcome2')#stay on welcome screen
+					else:
+						self.TD.set_Display_State("PromptUserID")        
+						self.guiEditor.updateState('PromptUserID')#if user has pressed 1, move on
 
-		elif display_state=='PromptUserID': #Do this after PromptUserID has finished
+			elif display_state=='Welcome2': #Do this after welcome has finished
+					if timeout_condition: #function called on timeout
+						self.Alert('blue')
+						self.TD.set_Display_State("Welcome1") 
+						self.guiEditor.updateState('Welcome1')#stay on welcome screen
+					else:
+						self.TD.set_Display_State("PromptUserID") 
+						self.guiEditor.updateState('PromptUserID')#if user has pressed 1 move on
+
+			elif display_state=='PromptUserID': #Do this after PromptUserID has finished
+				ID = flow_input
 				if timeout_condition: #function called on timeout
-					self.TD.set_Display_State("Welcome1") 
-					self.guiEditor.updateState('Welcome1')#go to  welcome screen
-				else:
-					ID = flow_input
-					if self.Check_ID_is_7_digits(ID):
+						self.TD.set_Display_State("Welcome1") 
+						self.guiEditor.updateState('Welcome1')#go to  welcome screen
+				elif self.Check_ID_is_7_digits(ID):
+					try:
 						Training_Level=self.AuthorizationDatabase(ID)
-						print Training_Level
+						self.TD._ID=ID
 						if Training_Level==0:
 							self.TD.set_Display_State("UserNotFound") 
 							self.guiEditor.updateState('UserNotFound')
-						elif Training_Level==1:
-							self.TD._ID=ID
-							self.TD.set_Display_State("NotAuthorized")
-							self.guiEditor.updateState('NotAuthorized')
-						elif Training_Level==2:
-							self.TD._ID=ID
-							self.TD.set_Display_State('FurtherTraining')
-							self.guiEditor.updateState('FurtherTraining')
-						elif Training_Level==3:
-							self.TD._ID=ID
-							self.TD.set_Display_State('AuthorizedGreen')
-							self.guiEditor.updateState('AuthorizedGreen') 
-                             
-					else: #if ID is not 7 digits
-						self.TD.set_Display_State("ID_Not_Valid") 
-						self.guiEditor.updateState('ID_Not_Valid')
+						elif Training_Level==1 or 2 or 3 or 4:
+							self.TD.RunTimeMessage = str(ID)
+							self.TD.set_Display_State('ID_Echo')
+							self.guiEditor.updateState('ID_Echo')
+					except Exception as e: 
+						print e 
+				else: #if ID is not 7 digits
+					self.TD.set_Display_State("ID_Not_Valid") 
+					self.guiEditor.updateState('ID_Not_Valid')
 
-		elif display_state=='ID_Not_Valid':
-				if timeout_condition: #function called on timeout
-				        self.TD.set_Display_State('Logout')
-				        self.guiEditor.updateState('Logout')
-				else:
-				        if flow_input==1:
-				                self.TD.set_Display_State("PromptUserID") 
-				                self.guiEditor.updateState('PromptUserID')
-				        elif flow_input==2:
-				                self.TD.set_Display_State('Logout')
-				                self.guiEditor.updateState('Logout')
-
-		elif display_state=='UserNotFound':
-				if timeout_condition: #function called on timeout
-				        self.TD.set_Display_State('Logout')
-				        self.guiEditor.updateState('Logout')
-				else:
-				        if flow_input==1:
-				                self.TD.set_Display_State("PromptUserID") 
-				                self.guiEditor.updateState('PromptUserID')
-				        elif flow_input==2:
-				                self.TD.set_Display_State('Logout')
-				                self.guiEditor.updateState('Logout')
-
-		elif display_state =='NotAuthorized':#Do this after NotAuthorized has finished
-				self.TD.set_Display_State('Logout')
-				self.guiEditor.updateState('Logout')
-
-		elif display_state =='Logout': #Do this after NotAuthorized has finished
-				self.Alert('blue')
-				self.TD.set_Display_State('Welcome1')
-				self.guiEditor.updateState('Welcome1')
-
-		elif display_state=='FurtherTraining':
-				if timeout_condition:
-					self.TD.set_Displapy_State('Logout')
-					self.guiEditor.updateState('Logout')
-				else:
-					self.TD.set_Display_State('VidOption')
-					self.guiEditor.updateState('VidOption')
-
-
-		elif display_state=='VidOption':
-				if timeout_condition:
-				        self.TD.set_Displapy_State('Logout')
-				        self.guiEditor.updateState('Logout')
-				else:
-				        if flow_input==1:
-							self.TD.set_Display_State('Video_Prep1')
-							self.guiEditor.updateState('Video_Prep1')
-				        if flow_input==2:
-							self.IdentifyUser()
-							self.TD.set_Display_State('fpsInput1')
-							self.guiEditor.updateState('fpsInput1')
-
-		elif display_state=='Video_Prep1':
-				self.TD.set_Display_State('Video1')
-				self.guiEditor.updateState('Video1')
-
-		elif display_state=='Video1':
-				self.TD.set_Display_State('VidOption')
-				self.guiEditor.updateState('VidOption')
-
-		elif display_state=='AuthorizedGreen':
-				self.IdentifyUser()
-				self.TD.set_Display_State('fpsInput1')
-				self.guiEditor.updateState('fpsInput1')
-
-
-                
-		elif display_state=='UseMachineGreen':
-				if timeout_condition:
-				        self.TD.set_Display_State('Logout')
-				        self.guiEditor.updateState('Logout')
-				else:
-				        self.TD.set_Display_State('Logout')
-				        self.guiEditor.updateState('Logout')
-
-		elif display_state=='UseMachineYellow':
-				if timeout_condition:
-				        self.TD.set_Display_State('Logout')
-				        self.guiEditor.updateState('Logout')
-				else:
-				        self.TD.set_Display_State('Logout')
-				        self.guiEditor.updateState('Logout')
-
-		# elif display_state=='NotRead1':
-		# 		if timeoout_condition:
-		# 		        self.TD.set_Display_State('Logout')
-		# 		        self.guiEditor.updateState('Logout')
-		# 		else:
-		# 		        if flow_input==1:
-		# 		                self.TD.set_Display_State('fpsInput1')
-		# 		                self.guiEditor.updateState('fpsInput1')
-		# 		        elif flow_input==2:
-		# 		                self.TD.set_Display_State('Logout')
-		# 		                self.guiEditor.updateState('Logout')
-
-                elif display_state=='TurnOff':
-                        if timeout_condition:
-                                self.TD.set_Display_State('Logout')
-                                self.guiEditor.updateState('Logout')
-                        else:
-                                self.TD.set_Display_State('Logout')
-                                self.guiEditor.updateState('Logout')
-        
-		elif display_state=='NoMatch1':
-				if timeout_condition:
-				    self.TD.set_Display_State('Logout')
-				    self.guiEditor.updateState('Logout')
-				else:
-				    if flow_input==1:
-						self.IdentifyUser()
-						self.TD.set_Display_State('fpsInput1')
-						self.guiEditor.updateState('fpsInput1')
-				    elif flow_input==2:
+			elif display_state=='ID_Echo':
+					if timeout_condition:
 						self.TD.set_Display_State('Logout')
 						self.guiEditor.updateState('Logout')
+					else: 
+						if flow_input==1:
+							ID=self.TD._ID
+							Training_Level=self.TD._Training_Level
+							if Training_Level==1:
+								self.TD.set_Display_State("NotAuthorized")
+								self.guiEditor.updateState('NotAuthorized')
+							elif Training_Level==2:
+								self.TD.set_Display_State('ConditionalAuthorization')
+								self.guiEditor.updateState('ConditionalAuthorization')
+							elif Training_Level==3:
+								self.TD.set_Display_State('AuthorizedGreen')
+								self.guiEditor.updateState('AuthorizedGreen')
+							elif Training_Level==4:
+								self.TD.set_Display_State('AuthorizedSupervisor')  
+								self.guiEditor.updateState('AuthorizedSupervisor')                           
+						elif flow_input==2:
+							self.TD.set_Display_State('PromptUserID')
+							self.guiEditor.updateState('PromptUserID')
 
-		elif display_state=='ServerDown':
-			    self.TD.set_Display_State('Logout')
-			    self.guiEditor.updateState('Logout')
+			elif display_state=='ID_Not_Valid':
+					if timeout_condition: #function called on timeout
+					        self.TD.set_Display_State('Logout')
+					        self.guiEditor.updateState('Logout')
+					else:
+						if flow_input==1:
+				        		self.TD.set_Display_State("PromptUserID") 
+			                	self.guiEditor.updateState('PromptUserID')
+				        if flow_input==2:
+			                	self.TD.set_Display_State('Logout')
+					        self.guiEditor.updateState('Logout')
+
+			elif display_state=='UserNotFound':
+					if timeout_condition: #function called on timeout
+					        self.TD.set_Display_State('Logout')
+					        self.guiEditor.updateState('Logout')
+					else:
+					        if flow_input==1:
+					                self.TD.set_Display_State("PromptUserID") 
+					                self.guiEditor.updateState('PromptUserID')
+					        if flow_input==2:
+					                self.TD.set_Display_State('Logout')
+					                self.guiEditor.updateState('Logout')
+
+			elif display_state =='NotAuthorized':#Do this after NotAuthorized has finished
+					self.TD.set_Display_State('Logout')
+					self.guiEditor.updateState('Logout')
+
+			elif display_state =='Logout': #Do this after NotAuthorized has finished
+					self.Alert('blue')
+					self.TD.set_Display_State('Welcome1')
+					self.guiEditor.updateState('Welcome1')
+
+			elif display_state=='ConditionalAuthorization':
+					if timeout_condition:
+						self.TD.set_Displapy_State('Logout')
+						self.guiEditor.updateState('Logout')
+					else:
+						self.TD.set_Display_State('ModOption')
+						self.guiEditor.updateState('ModOption')
 
 
+			elif display_state=='ModOption':
+					if timeout_condition:
+					        self.TD.set_Displapy_State('Logout')
+					        self.guiEditor.updateState('Logout')
+					else:
+						if flow_input==1:
+							self.TD.set_Display_State('ModPrep1')
+							self.guiEditor.updateState('ModPrep1')
+						if flow_input==2:
+							self.TD.set_Display_State('ModPrep2')
+							self.guiEditor.updateState('ModPrep2')
+						if flow_input==3:
+							self.TD.set_Display_State('ModPrep3')
+							self.guiEditor.updateState('ModPrep3')
+
+			elif display_state=='ModPrep1':
+					self.TD.set_Display_State('ModClear1')
+					self.guiEditor.updateState('ModClear1')
+
+			elif display_state=='ModPrep2':
+					self.TD.set_Display_State('ModClear2')
+					self.guiEditor.updateState('ModClear2')
+
+			elif display_state=='ModPrep3':
+					self.TD.set_Display_State('ModClear3')
+					self.guiEditor.updateState('ModClear3')
+
+			elif display_state=='ModClear1':
+				if timeout_condition:
+					self.TD.set_Display_State('Mod1')
+					self.guiEditor.updateState('Mod1')
+
+			elif display_state=='ModClear2':
+				if timeout_condition:
+					self.TD.set_Display_State('Mod2')
+					self.guiEditor.updateState('Mod2')
+
+			elif display_state=='ModClear3':
+				if timeout_condition:
+					self.TD.set_Display_State('Mod3')
+					self.guiEditor.updateState('Mod3')
+
+			elif display_state=='Mod1':
+					self.TD.set_Display_State('Rewatch')
+					self.guiEditor.updateState('Rewatch')
+
+			elif display_state=='Mod2':
+					self.TD.set_Display_State('Rewatch')
+					self.guiEditor.updateState('Rewatch')
+
+			elif display_state=='Mod3':
+					self.TD.set_Display_State('Rewatch')
+					self.guiEditor.updateState('Rewatch')
+
+			elif display_state=='Rewatch':
+				if timeout_condition:
+					self.TD.set_Display_State('Logout')
+					self.guiEditor.updateState('Logout')
+				else:
+					if flow_input==1:
+						self.TD.set_Display_State('ModOption')
+						self.guiEditor.updateState('ModOption')
+					if flow_input==2:
+						self.IdentifyUser()
+						self.TD.set_Display_State('FPSinput')
+						self.guiEditor.updateState('FPSinput')			
+
+			elif display_state=='AuthorizedGreen':
+				if flow_input==1:
+					self.TD.set_Display_State('ModOption')
+					self.guiEditor.updateState('ModOption')
+				if flow_input==2:
+					self.IdentifyUser()
+					self.TD.set_Display_State('FPSinput')
+					self.guiEditor.updateState('FPSinput')
+
+			elif display_state=='AuthorizedSupervisor':
+					self.Alert('green')
+					self.TD.set_Display_State('UseMachineGreen')
+					self.guiEditor.updateState('UseMachineGreen')
+	                
+			elif display_state=='UseMachineGreen':
+					if timeout_condition:
+					        self.TD.set_Display_State('Logout')
+					        self.guiEditor.updateState('Logout')
+					else:
+					        self.TD.set_Display_State('Logout')
+					        self.guiEditor.updateState('Logout')
+
+			elif display_state=='UseMachineYellow':
+					if timeout_condition:
+					        self.TD.set_Display_State('Logout')
+					        self.guiEditor.updateState('Logout')
+					else:
+					        self.TD.set_Display_State('Logout')
+					        self.guiEditor.updateState('Logout')
+
+
+			elif display_state=='TurnOff':
+					if timeout_condition:
+					    self.TD.set_Display_State('Logout')
+					    self.guiEditor.updateState('Logout')
+					else:
+					    self.TD.set_Display_State('Logout')
+					    self.guiEditor.updateState('Logout')
+
+			elif display_state=='NoMatch':
+					if timeout_condition:
+					    self.TD.set_Display_State('Logout')
+					    self.guiEditor.updateState('Logout')
+					else:
+					    if flow_input==1:
+							self.IdentifyUser()
+							self.TD.set_Display_State('FPSinput')
+							self.guiEditor.updateState('FPSinput')
+					    elif flow_input==2:
+							self.TD.set_Display_State('Logout')
+							self.guiEditor.updateState('Logout')
+
+			elif display_state=='NotRead':
+					if timeout_condition:
+					    self.TD.set_Display_State('Logout')
+					    self.guiEditor.updateState('Logout')
+					else:
+					    if flow_input==1:
+							self.IdentifyUser()
+							self.TD.set_Display_State('FPSinput')
+							self.guiEditor.updateState('FPSinput')
+					    elif flow_input==2:
+							self.TD.set_Display_State('Logout')
+							self.guiEditor.updateState('Logout')
+
+			elif display_state=='ServerDown':
+						self.TD.set_Display_State('Logout')
+						self.guiEditor.updateState('Logout')
                         
+		except Exception as e:
+			print e
+			raise e
                         
 
 	def Check_ID_is_7_digits(self,ID): #function makes sure ID number is correct
@@ -355,6 +427,7 @@ class Handler(object):
 				self.TD._UserTemplate = 'notemplate'
 				self.TD.set_Display_State('ServerDown')
 				self.guiEditor.updateState('ServerDown') 
+				raise e
 		return self.TD._Training_Level
 
 		
@@ -368,7 +441,6 @@ class Handler(object):
 		time.sleep(5)
 		self.root.destroy()
 		subprocess.call('python '+ self.directory +'/Enroll.py', shell=True)
-		os._exit(1)
 
 
 
