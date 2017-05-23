@@ -114,7 +114,7 @@ class Handler(object):
 
 
 	def Alert(self,LED_COLOR):
-		logging.debug('updating LED')
+		print LED_COLOR
 		self.TD.set_Alert_State(LED_COLOR)
 		GPIO.LED_ON(LED_COLOR)
 
@@ -131,20 +131,20 @@ class Handler(object):
 	def Csense(self):
 		Alert=self.TD.get_Alert_State()
 		Sys=self.TD.get_Sys_State()
-		self.Alert("blue")
+		time.sleep(3)
 
 		while Sys!='shutdown' and self.running:
-			logging.debug('Checking Button')
 			Alert=self.TD.get_Alert_State()
 			Sys=self.TD.get_Sys_State()
-
-
-
-			# if GPIO.ReadButton() and Alert=="blue":
-			# 	self.Alert("red")
-			# 	self.TD.set_Display_State('TurnOff')
-			# 	self.guiEditor.updateState('TurnOff')
-
+			result =0 
+			for i in range (1,200):
+				result += GPIO.ReadButton()
+				time.sleep(.01)
+			print result
+			if result>50 and Alert =="blue":
+				self.Alert("red")
+				self.TD.set_Display_State('TurnOff')
+				self.guiEditor.updateState('TurnOff')
 
 			time.sleep(.1)
 		GPIO.Cleanup()
@@ -153,9 +153,13 @@ class Handler(object):
 		
 	def FlowLogic(self,display_state,timeout_condition,flow_input):
 		try:
-			if type(flow_input)==type(''):
-				if len(flow_input)>0:
-					flow_input=int(flow_input)
+			try: 
+				if type(flow_input)==type(''):
+					if len(flow_input)>0:
+						flow_input=int(flow_input)
+			except Exception as e:
+				print e
+				flow_input = ' '
 
 
 			if display_state=='Welcome1': #Do this after welcome has finished
@@ -366,11 +370,11 @@ class Handler(object):
 
 			elif display_state=='TurnOff':
 					if timeout_condition:
-					    self.TD.set_Display_State('Logout')
-					    self.guiEditor.updateState('Logout')
+					    self.TD.set_Display_State('Welcome1')
+					    self.guiEditor.updateState('Welcome1')
 					else:
-					    self.TD.set_Display_State('Logout')
-					    self.guiEditor.updateState('Logout')
+					    self.TD.set_Display_State('Welcome1')
+					    self.guiEditor.updateState('Welcome1')
 
 			elif display_state=='NoMatch':
 					if timeout_condition:
@@ -406,7 +410,6 @@ class Handler(object):
                         
 		except Exception as e:
 			print e
-			raise e
                         
 
 	def Check_ID_is_7_digits(self,ID): #function makes sure ID number is correct

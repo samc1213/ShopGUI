@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 import Tkinter as tk
 from Constants import BIG_FONT_HEIGHT_FRACTION, BACKGROUND_COLOR
 from TextLabel import TextLabel

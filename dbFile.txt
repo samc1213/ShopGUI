@@ -1,6 +1,6 @@
-DisplayState,Template #,StringList(; delimited),Duration,FileAddress,BackgroundColor,fontsize
-Welcome1,1,Welcome;;Press enter to continue,10,,#4E2A84,.07
-Welcome2,1,Welcome;;Press enter to continue,10,,#4E2A84,.07
+BDisplayState,Template #,StringList(; delimited),Duration,FileAddress,BackgroundColor,fontsize
+Welcome1,1,Welcome;;Press enter to continue,120,,#4E2A84,.07
+Welcome2,1,Welcome;;Press enter to continue,120,,#4E2A84,.07
 PromptUserID,5,Enter ID,30,,#4E2A84,.1
 ID_Echo,4,Hi user {Run_Time_Message};;1-Continue;2-This isn't me,30,,#4E2A84,.08
 OkGo,3,,10,images/image-{NUMBER}.jpeg,#4E2A84,.1
@@ -25,7 +25,7 @@ NotRead,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1
 NoMatch,4,Unable to read fingerprint;;1-Try again;2-Logout,30,,#4E2A84,.1
 UseMachineGreen,4,You may now use; the machine;;Press enter to logout,1800,,#00FF00,.1
 UseMachineYellow,4,You may now use the; machine but may; require new training;;Press enter to logout,1800,,#E5E500,.1
-TurnOff,4,Turn machine off; immediately;;Press enter to logout,1800,,#4E2A84,.1
+TurnOff,4,Turn machine off; immediately;;Press enter to logout,1800,,#B22222,.1
 ServerDown,1,Failed to connect to server; ;Please ask trainers; for permission to use; machine offline,30,,#4E2A84,.06
 Logout,1,Logging Out,3,,#4E2A84,.1
 ID_Not_Valid,4,ID not Valid;1-Retry login;2-Logout,30,,#4E2A84,.1 

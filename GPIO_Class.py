@@ -20,7 +20,7 @@ class GPIO_Class(object):
 		GPIO.setwarnings(False)
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setup(channel_list,GPIO.OUT,initial=GPIO.LOW)
-		GPIO.setup(button,GPIO.IN)
+		GPIO.setup(button,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
 		pass
 
     def All_off(self):
