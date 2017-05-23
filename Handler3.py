@@ -164,7 +164,7 @@ class Handler(object):
 
 			if display_state=='Welcome1': #Do this after welcome has finished
 					if timeout_condition: #function called on timeout
-						self.Alert('blue')
+						self.Alert("blue")
 						self.TD.set_Display_State("Welcome2") 
 						self.guiEditor.updateState('Welcome2')#stay on welcome screen
 					else:
@@ -173,7 +173,7 @@ class Handler(object):
 
 			elif display_state=='Welcome2': #Do this after welcome has finished
 					if timeout_condition: #function called on timeout
-						self.Alert('blue')
+						self.Alert("blue")
 						self.TD.set_Display_State("Welcome1") 
 						self.guiEditor.updateState('Welcome1')#stay on welcome screen
 					else:
@@ -192,7 +192,7 @@ class Handler(object):
 						if Training_Level==0:
 							self.TD.set_Display_State("UserNotFound") 
 							self.guiEditor.updateState('UserNotFound')
-						elif Training_Level==1 or 2 or 3 or 4:
+						elif Training_Level==1 or Training_Level==2 or Training_Level==3 or Training_Level==4:
 							self.TD.RunTimeMessage = str(ID)
 							self.TD.set_Display_State('ID_Echo')
 							self.guiEditor.updateState('ID_Echo')
@@ -370,11 +370,13 @@ class Handler(object):
 
 			elif display_state=='TurnOff':
 					if timeout_condition:
-					    self.TD.set_Display_State('Welcome1')
-					    self.guiEditor.updateState('Welcome1')
+						self.Alert("blue")
+						self.TD.set_Display_State('Welcome1')
+						self.guiEditor.updateState('Welcome1')
 					else:
-					    self.TD.set_Display_State('Welcome1')
-					    self.guiEditor.updateState('Welcome1')
+						self.Alert("blue")
+						self.TD.set_Display_State('Welcome1')
+						self.guiEditor.updateState('Welcome1')
 
 			elif display_state=='NoMatch':
 					if timeout_condition:
@@ -420,6 +422,10 @@ class Handler(object):
 		if ID==9999999:
 			self.EnrollUser()
 			self.TD._Training_Level = 0
+		elif ID==7777777:
+			self.TD.set_Display_State('AuthorizedSupervisor')  
+			self.guiEditor.updateState('AuthorizedSupervisor')  
+			self.TD._Training_Level = 5
 		else:
 			try:
 				Network_Client = Net_DB_Client()
