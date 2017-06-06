@@ -43,49 +43,46 @@ database=DB()
 
 class FPS_Class(object):
         def __init__(self,thread_data):
-                self.thread_data=thread_data
+                self.thread_data=thread_data #pass global data to FPS to retrieve globally stored fingerprint templates
                 pass
 
 
 
 
-        def calcChecksum(self, package):	# <4>
+        def calcChecksum(self, package):	# checks to make sure data package is appropiate size
                 checksum = 0
                 for byte in package:
                         checksum += ord(byte)
                 return int(checksum)
 
-        def sendCmd(self, cmd, param = 0):	# <5>
-                package = chr(STX1)+chr(STX2)+struct.pack('<hih', 1, param, cmd)	# <6>
-                checksum = self.calcChecksum(package)
-                package += struct.pack('<h',checksum)	# <7>
+        def sendCmd(self, cmd, param = 0):	# sends data package to sensor
+                package = chr(STX1)+chr(STX2)+struct.pack('<hih', 1, param, cmd)	# preparing the data package
+                checksum = self.calcChecksum(package) #is data package appropiate size
+                package += struct.pack('<h',checksum)	# #put size at the end of data package ( this is expected by sensor)
 
-                sent = port.write(package)
+                sent = port.write(package) #serial write
 
                 if(sent != len(package)):
                         print "Error communicating"
                         return -1
 
-                recv = port.read(sent)	# <8>
-                recvPkg = struct.unpack('cchihh',recv)	# <9>
+                recv = port.read(sent)	# expecting to receive acklowedgement
+                recvPkg = struct.unpack('cchihh',recv)	# #unpacking the data package
 
-                if recvPkg[4] == NACK:
-                        if recvPkg[3]==4106:
+                if recvPkg[4] == NACK: #negative acknowledgement
+                        if recvPkg[3]==4106: #specific error code
                                 print('Found no templates to remove')
                         else:
-                                print("error: %s" % recvPkg[3])
+                                print("error: %s" % recvPkg[3]) #other error codes
                         return -2
                 time.sleep(.1)
-                return recvPkg[3]
+                return recvPkg[3] #return error code
 
-        def get_template(self, cmd,ID_N,overwrite=0,param = 0):	# <5>
+        def get_template(self, cmd,ID_N,overwrite=0,param = 0):	# very specific commands to retrieve fingerprint template from sensor
 
                 package = chr(STX1)+chr(STX2)+struct.pack('<hih', 1, param, cmd)	# send get template commande
                 checksum = self.calcChecksum(package)  #creates last part of package to be sent to FPS
                 package += struct.pack('<h',checksum)	#adds checksum to package
-
-
-
 
                 sent = port.write(package) #writes package via serial
 
@@ -100,8 +97,6 @@ class FPS_Class(object):
                         print("error: %s" % recvPkg[3])
                         return -2
 
-
-
                 recvdata = port.read(4+498+2)	# #receives data1 byte, data 2 byte, device I 2bytes, 498 byte fingerprint template , 2 byte checksum at end
 
                 package_data=list(recvdata)
@@ -112,22 +107,17 @@ class FPS_Class(object):
 
                         strdata +=item
 
-                #database.write_template(self.filename,ID_N,strdata,overwrite) #write to text file with accompanying ID
-                self.thread_data._UserTemplate = strdata; 
-
-
+                self.thread_data._UserTemplate = strdata; #store fingerprint template on global thread data
 
                 #time.sleep(1)
                 return recvPkg[3]
 
-        def set_template(self,cmd,ID_N,param=0):
+        def set_template(self,cmd,ID_N,param=0): #store fingerprint template on sensor
 
                 #send command
                 package = chr(STX1)+chr(STX2)+struct.pack('<hih', 1, param, cmd)	# send get template commande
                 checksum = self.calcChecksum(package)  #creates last part of package to be sent to FPS
                 package += struct.pack('<h',checksum)	#adds checksum to package
-
-
 
 
                 sent = port.write(package) #writes package via serial
@@ -169,7 +159,7 @@ class FPS_Class(object):
                 return 1
 
 
-        def startScanner(self):
+        def startScanner(self): #open scanner communications
                 print("Open scanner communications")
                 self.sendCmd(CMD_OPEN)
 
@@ -178,26 +168,26 @@ class FPS_Class(object):
                 self.sendCmd(CMD_CLOSE)
 
 
-        def led(self,status = True):
+        def led(self,status = True): #turn on or off LED, no input means status is true
                 if status:
                         self.sendCmd(CMD_LED,1)
                 else:
                         self.sendCmd(CMD_LED,0)
 
-        def enrollFail(self):
+        def enrollFail(self): #due this if enroll failed 
                 print("Enroll failed")
                 self.led(False)
                 self.stopScanner()
 
-        def identFail(self):
+        def identFail(self): #failed to identify user
                 print("Ident failed")
                 self.led(False)
                 self.stopScanner()
 
-        def startEnroll(self,ident):
+        def startEnroll(self,ident): #sepcific command to begin enrolling
                 self.sendCmd(CMD_ENROLL_START,ident)
 
-        def waitForFinger(self,state):
+        def waitForFinger(self,state): #very important, this section of the code stops waiting for a finger after 30 seconds!
             counter=0
             if(state):
                 while(self.sendCmd(CMD_IS_FINGER_PRESSED) == 0 and counter<30):
