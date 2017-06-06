@@ -139,6 +139,7 @@ class Handler(object):
 				self.Alert("red")
 				self.TD.set_Display_State('TurnOff')
 				self.guiEditor.updateState('TurnOff')
+				self.TakePicture()
 
 			time.sleep(.1)
 		GPIO.Cleanup() #cleanup and shutdown occur when running is set to false, when Enrolling a user
@@ -457,6 +458,9 @@ class Handler(object):
 		time.sleep(5)
 		self.root.destroy() #destroy the full screen display
 		subprocess.call('python '+ self.directory +'/Enroll.py', shell=True) #call another process to enroll the user
+
+	def TakePicture(self):
+		subprocess.call('/usr/bin/python3 '+ self.directory +'/Camera.py', shell=True)
 
 
 
