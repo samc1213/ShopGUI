@@ -426,6 +426,10 @@ class Handler(object):
 			self.TD.set_Display_State('AuthorizedSupervisor')  
 			self.guiEditor.updateState('AuthorizedSupervisor')  
 			self.TD._Training_Level = 5
+		elif ID==1234567: #for prototype presentation
+			self.TD._Training_Level = 2
+		elif ID==7654321: #for prototype presenation
+			self.TD._Training_Level = 3
 		else:
 			try:
 				Network_Client = Net_DB_Client()
