@@ -14,6 +14,12 @@ GPIO = GPIO_Class()
 threads = []
 
 
+#Handler is a class that handles the majority of the overall system logic, its most important functions 
+#include 
+#	resetting the GUI loop by checking the last display template and updating the display template
+#	Starting a thread that communicates with the fingerprint sensor
+#	Starting a thread that polls the machine status current sensor
+#	connecting to the server and retrieving data using client class
 
 class Handler(object):
 	def __init__(self, guiEditor, observer,Working_directory, Running,root,TD):
@@ -26,32 +32,34 @@ class Handler(object):
 				"/dev/ttyAMA0",
 				baudrate=9600,
 				timeout=None)	# <12>port = None
-
-
-
-		#logging.basicConfig(level=logging.DEBUG, format='[%(levelname)s] (%(threadName)-10s) %(message)s',)
-
 		self.running = Running
 		self.observer = observer
-		self.observer.addTimeoutListener(self.onTimeout)
-		self.observer.addInputListener(self.onInput_H)
+
+		#GUI observer calls onTimeout when it detects a kernel timeout event
+		self.observer.addTimeoutListener(self.onTimeout) 
+
+		#GUI observer calls onInput_H when it detects user has pressed a key,
+		#	note that Display State factory also receives notice of on input and it actually processes the input,
+		#	handler is just made aware an input event occurred
+		self.observer.addInputListener(self.onInput_H) 
 		pass
 
 	def onTimeout(self):
 		print 'THE HANDLER NOW KNOWS ABOUT A TIMEOUT :D'
-		
-		self.FlowLogic(self.TD.get_Display_State(),1,9999)#9999 is default for timeout
+		#on timeout call flow logic to reset the GUI loop,
+		self.FlowLogic(self.TD.get_Display_State(),1,9999)#9999 is placeholder input for timeout
 
 		
 	def onInput_H(self,input_from_GUI):
                 print 'THE HANDLER NOW KNOWS ABOUT AN INPUT :D'
-
+                #on input call flow logic to reset the GUI loop, flow logic resets the timer by updating the display state
                 self.FlowLogic(self.TD.get_Display_State(),0,input_from_GUI)
                 
 
 
 
 	def DoWorkerThread(self):
+		#turn LEDs on for testing on startup
 		GPIO.LED_ON("yellow")
 		time.sleep(.5)
 		GPIO.LED_ON("blue")
@@ -62,30 +70,25 @@ class Handler(object):
 		time.sleep(.5)
 		GPIO.LED_ON("blue")
 
+		#initialize current sensing looping thread
 		C = threading.Thread(name='Csense', target=self.Csense)
-		
-		T = threading.Thread(name='Timer', target=self.Timer, args=(300,))
-
-
 		threads.append(C)
-		threads.append(T)
-
-
 		C.start()
-		T.start()
 
+		#start the GUI loop with welcome 1
 		self.FlowLogic('Welcome1',1,9999)
 
 	def StartWorkerThreads(self):
+		#runs slow handler initializations on a separate thread so GUI loop starts before worker threads is finished
 		self.running = True
 		workerThreads = threading.Thread(name='DoWorkerThread', target=self.DoWorkerThread)
 		workerThreads.start()
 		
-
 	def Fingerprint(self):
-		ID=self.TD._ID
+		#identifies user on a separate thread, if the sensor freezes the GUI doesnt freeze
+		ID=self.TD._ID #gets ID number from Global Data
 		print 'entering identify thread'
-		FPS_Return = self.fps.FPS_Identify(ID)
+		FPS_Return = self.fps.FPS_Identify(ID) #uses FPS class to identify user
 		if FPS_Return == 1:
 			print "userfound"
 			if self.TD._Training_Level == 3:
@@ -113,22 +116,13 @@ class Handler(object):
 
 
 
-	def Alert(self,LED_COLOR):
+	def Alert(self,LED_COLOR): #changes LED color and also change global variable describing alert condition
 		print LED_COLOR
 		self.TD.set_Alert_State(LED_COLOR)
 		GPIO.LED_ON(LED_COLOR)
 
-	def Timer(self, max_seconds):
-		counter = 0
-		while counter <= max_seconds and self.running:
-			#logging.debug(counter)
-			time.sleep(.1)
-			counter = counter+.1
-			self.TD.set_Sec_Count(counter)
 
-		logging.debug('Timer counted to %d seconds', max_seconds)
-
-	def Csense(self):
+	def Csense(self): #loop while polling the current sensor, ignore sys states they dont do anything anymore, 
 		Alert=self.TD.get_Alert_State()
 		Sys=self.TD.get_Sys_State()
 		time.sleep(3)
@@ -141,17 +135,23 @@ class Handler(object):
 				result += GPIO.ReadButton()
 				time.sleep(.01)
 			print result
-			if result>50 and Alert =="blue":
+			if result>50 and Alert =="blue": #if C sense reports high signals above threshold 50 and alert is blue, change condition to red
 				self.Alert("red")
 				self.TD.set_Display_State('TurnOff')
 				self.guiEditor.updateState('TurnOff')
 
 			time.sleep(.1)
-		GPIO.Cleanup()
+		GPIO.Cleanup() #cleanup and shutdown occur when running is set to false, when Enrolling a user
 		print ("Csense shutting down")
 		logging.debug('Csense shutting Down')
 		
 	def FlowLogic(self,display_state,timeout_condition,flow_input):
+		#this is a very long function but it is pretty simple, it just repeats a lot. 
+		#	first it will try to convert the flow input to a number, the user may have presed + or - keys so it will fail, catch the exception, and move on
+		#	Then it checks the previous display
+		#		if the previous display state ended on a timeout, then a certain display state should be next 
+		#		if the previous display state ended on an input, use the input, or assume it was enter to determine next display state
+		#	This logic is hard to follow but it identical to the flow logic diagram on the product architecture section of the report
 		try:
 			try: 
 				if type(flow_input)==type(''):
@@ -414,11 +414,10 @@ class Handler(object):
 			print e
                         
 
-	def Check_ID_is_7_digits(self,ID): #function makes sure ID number is correct
+	def Check_ID_is_7_digits(self,ID): #function makes sure ID number is 7 digits with no initial zeros
 		if ID>999999:
 			return ID<10000000
 	def AuthorizationDatabase(self,ID): #function reads database for training level
-		#function not yet implemented, enter a training level to return for testing purposes
 		if ID==9999999:
 			self.EnrollUser()
 			self.TD._Training_Level = 0
@@ -426,38 +425,38 @@ class Handler(object):
 			self.TD.set_Display_State('AuthorizedSupervisor')  
 			self.guiEditor.updateState('AuthorizedSupervisor')  
 			self.TD._Training_Level = 5
-		elif ID==1234567: #for prototype presentation
-			self.TD._Training_Level = 2
-		elif ID==7654321: #for prototype presenation
-			self.TD._Training_Level = 3
+		# elif ID==1234567: #for prototype presentation
+		# 	self.TD._Training_Level = 2
+		# elif ID==7654321: #for prototype presenation
+		# 	self.TD._Training_Level = 3
 		else:
-			try:
+			try: #try to connect to the client
 				Network_Client = Net_DB_Client()
 				Network_Client.Connect()
 				Data = Network_Client.Request_User_Data(ID)
-				self.TD._Training_Level = int(Data[1]) 
-				self.TD._UserTemplate = Data[2]
-				Network_Client = None
+				self.TD._Training_Level = int(Data[1]) #if succesful store the users training level and
+				self.TD._UserTemplate = Data[2]# users fingerprint template globally for using when scanning
+				Network_Client = None #reset network client to None class
 			except Exception as e:
 				print e
-				self.TD._Training_Level = 5
-				self.TD._UserTemplate = 'notemplate'
-				self.TD.set_Display_State('ServerDown')
+				self.TD._Training_Level = 5 #5 is not a valid training and this removes the permission number of the previous user 
+				self.TD._UserTemplate = 'notemplate' #failure to retrieve template means no template can be scanned
+				self.TD.set_Display_State('ServerDown') #create server down display state
 				self.guiEditor.updateState('ServerDown') 
-				raise e
+				raise e #raise the exception
 		return self.TD._Training_Level
 
 		
-	def IdentifyUser(self): #function reads database for fingerprint template
+	def IdentifyUser(self): #function uses sensor to identify user
 		F = threading.Thread(name='FPS', target=self.Fingerprint)
 		threads.append(F)
 		F.start()
 
-	def EnrollUser(self):
-		self.running=False
+	def EnrollUser(self): #function kills app to enroll a new user,this a sloppy way of enrolling a user because App doesnt like to be terminated in this fashion
+		self.running=False #stop running C sense
 		time.sleep(5)
-		self.root.destroy()
-		subprocess.call('python '+ self.directory +'/Enroll.py', shell=True)
+		self.root.destroy() #destroy the full screen display
+		subprocess.call('python '+ self.directory +'/Enroll.py', shell=True) #call another process to enroll the user
 
 
 
